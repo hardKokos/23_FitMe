@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "Flutter (lib/test.dart)",
+            "type": "dart",
+            "request": "launch",
+            "cwd": "frontend/fit_me",
+            "program": "lib/test.dart"
+        }
+    ]
+}
