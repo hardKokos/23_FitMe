@@ -6,6 +6,13 @@
             "request": "launch",
             "cwd": "frontend/fit_me",
             "program": "lib/test.dart"
+        },
+        {
+            "name": "Flutter (lib/calendar.dart)",
+            "type": "dart",
+            "request": "launch",
+            "cwd": "frontend/fit_me",
+            "program": "lib/calendar.dart"
         }
     ]
 }
