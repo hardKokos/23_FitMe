@@ -5,6 +5,7 @@ class EventCalendarPage extends StatefulWidget {
   const EventCalendarPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _EventCalendarPageState createState() => _EventCalendarPageState();
 }
 
@@ -33,8 +34,8 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
     return BottomNavigationBar(
       currentIndex: _currentIndex,
       showUnselectedLabels: true,
-      selectedItemColor: Colors.black,
-      unselectedItemColor: Colors.blue,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.lime.shade400,
       onTap: (int index) {
         setState(() {
           _currentIndex = index;
@@ -44,44 +45,50 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
         BottomNavigationBarItem(
           icon: Icon(
             Icons.calendar_month,
-            color: Colors.black,
+            color: Colors.white,
           ),
           label: 'Home',
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.search,
-            color: Colors.black,
+            color: Colors.white,
           ),
           label: 'Find product',
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.create,
-            color: Colors.black,
+            color: Colors.white,
           ),
           label: 'Create diet',
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.directions_run,
-            color: Colors.black,
+            color: Colors.white,
           ),
           label: 'Daily activities',
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.coffee,
-            color: Colors.black,
+            color: Colors.white,
           ),
           label: 'Water',
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.shopping_bag,
-            color: Colors.black,
+            color: Colors.white,
           ),
           label: 'Fit Shops',
+          backgroundColor: Colors.black,
         ),
       ],
     );
@@ -98,7 +105,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              color: Colors.white,
             ),
           ),
         ),
@@ -106,10 +113,12 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
           padding: const EdgeInsets.all(12.0),
           child: CircleAvatar(
             radius: 25,
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.lime.shade400,
             child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.add),
+              onPressed: () {
+                // Add on press event
+              },
+              icon: const Icon(Icons.add, color: Colors.white),
             ),
           ),
         ),
@@ -127,46 +136,76 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Calendar',
+          'Fit Me',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black, // Adjusted text color
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.lime.shade400,
         centerTitle: true,
         elevation: 0.0,
       ),
+      backgroundColor: Colors.grey[850],
       bottomNavigationBar: buildBottomNavigationBar(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TableCalendar(
-            firstDay: threeYearsAgo,
-            lastDay: threeYearsForth,
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            calendarFormat: _calendarFormat,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            onDaySelected: _onDaySelected,
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-          ),
-          buildRow('Text 1'),
-          buildRow('Text 2'),
-          buildRow('Text 3'),
-          buildRow('Text 4'),
-          buildRow('Text 5'),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey[850],
+              child: TableCalendar(
+                firstDay: threeYearsAgo,
+                lastDay: threeYearsForth,
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                calendarFormat: _calendarFormat,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                onDaySelected: _onDaySelected,
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  weekendTextStyle:
+                      const TextStyle(color: Colors.lightGreenAccent),
+                  holidayTextStyle: const TextStyle(color: Colors.lime),
+                  todayDecoration: const BoxDecoration(
+                    color: Colors.lime,
+                    shape: BoxShape.circle,
+                  ),
+                  selectedTextStyle: const TextStyle(color: Colors.white),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.lime.shade400,
+                    shape: BoxShape.circle,
+                  ),
+                  defaultTextStyle: const TextStyle(color: Colors.white),
+                ),
+                headerStyle: const HeaderStyle(
+                  leftChevronIcon:
+                      Icon(Icons.arrow_back_ios, color: Colors.lime),
+                  rightChevronIcon:
+                      Icon(Icons.arrow_forward_ios, color: Colors.lime),
+                  titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+                  formatButtonVisible: false,
+                ),
+              ),
+            ),
+            buildRow('Brekfast'),
+            buildRow('Second brekfast'),
+            buildRow('Lunch'),
+            buildRow('Dinner'),
+            buildRow('Snack'),
+            buildRow('Supper'),
+          ],
+        ),
       ),
     );
   }
