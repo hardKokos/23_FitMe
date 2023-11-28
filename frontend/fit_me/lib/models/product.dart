@@ -8,15 +8,17 @@ class Product {
   String? category;
   String? categoryLabel;
   String? image;
+  bool? isSelected;
 
   Product(
       {this.foodId,
-        this.label,
-        this.knownAs,
-        this.nutrients,
-        this.category,
-        this.categoryLabel,
-        this.image});
+      this.label,
+      this.knownAs,
+      this.nutrients,
+      this.category,
+      this.categoryLabel,
+      this.image,
+      this.isSelected = false});
 
   Product.fromJson(Map<String, dynamic> json) {
     foodId = json['foodId'];
@@ -28,6 +30,7 @@ class Product {
     category = json['category'];
     categoryLabel = json['categoryLabel'];
     image = json['image'];
+    isSelected = false;
   }
 
   Map<String, dynamic> toJson() {
