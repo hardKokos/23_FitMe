@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'add_meal.dart';
 
 class EventCalendarPage extends StatefulWidget {
   const EventCalendarPage({Key? key}) : super(key: key);
@@ -21,6 +22,11 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
     _selectedDay = _focusedDay;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
@@ -30,17 +36,149 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
     }
   }
 
-  Widget buildBottomNavigationBar() {
+  Widget buildRow(String text) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: CircleAvatar(
+            radius: 25,
+            backgroundColor: Colors.lime.shade400,
+            child: IconButton(
+              onPressed: () {
+                // Add on press event
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddMealPage()),
+                );
+              },
+              icon: const Icon(Icons.add, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime threeYearsAgo =
+        DateTime.now().subtract(const Duration(days: 3 * 365));
+    DateTime threeYearsForth =
+        DateTime.now().add(const Duration(days: 3 * 365));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Fit Me',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black, // Adjusted text color
+          ),
+        ),
+        backgroundColor: Colors.lime.shade400,
+        centerTitle: true,
+        elevation: 0.0,
+        automaticallyImplyLeading: false,
+      ),
+      backgroundColor: Colors.grey[850],
+      bottomNavigationBar: MyBottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey[850],
+              child: TableCalendar(
+                firstDay: threeYearsAgo,
+                lastDay: threeYearsForth,
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                calendarFormat: _calendarFormat,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                onDaySelected: _onDaySelected,
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  weekendTextStyle:
+                      const TextStyle(color: Colors.lightGreenAccent),
+                  holidayTextStyle: const TextStyle(color: Colors.lime),
+                  todayDecoration: const BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                  ),
+                  selectedTextStyle: const TextStyle(color: Colors.white),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.lime.shade400,
+                    shape: BoxShape.circle,
+                  ),
+                  defaultTextStyle: const TextStyle(color: Colors.white),
+                ),
+                headerStyle: const HeaderStyle(
+                  leftChevronIcon:
+                      Icon(Icons.arrow_back_ios, color: Colors.lime),
+                  rightChevronIcon:
+                      Icon(Icons.arrow_forward_ios, color: Colors.lime),
+                  titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+                  formatButtonVisible: false,
+                ),
+              ),
+            ),
+            buildRow('Brekfast'),
+            buildRow('Second brekfast'),
+            buildRow('Lunch'),
+            buildRow('Dinner'),
+            buildRow('Snack'),
+            buildRow('Supper'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyBottomNavigationBar extends StatelessWidget {
+  final int currentIndex;
+  final void Function(int) onTap;
+
+  MyBottomNavigationBar({required this.currentIndex, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _currentIndex,
+      currentIndex: currentIndex,
       showUnselectedLabels: true,
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.lime.shade400,
-      onTap: (int index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
+      onTap: onTap,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(
@@ -91,122 +229,6 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
           backgroundColor: Colors.black,
         ),
       ],
-    );
-  }
-
-  Widget buildRow(String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.lime.shade400,
-            child: IconButton(
-              onPressed: () {
-                // Add on press event
-              },
-              icon: const Icon(Icons.add, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    DateTime threeYearsAgo =
-        DateTime.now().subtract(const Duration(days: 3 * 365));
-    DateTime threeYearsForth =
-        DateTime.now().add(const Duration(days: 3 * 365));
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Fit Me',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black, // Adjusted text color
-          ),
-        ),
-        backgroundColor: Colors.lime.shade400,
-        centerTitle: true,
-        elevation: 0.0,
-      ),
-      backgroundColor: Colors.grey[850],
-      bottomNavigationBar: buildBottomNavigationBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              color: Colors.grey[850],
-              child: TableCalendar(
-                firstDay: threeYearsAgo,
-                lastDay: threeYearsForth,
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                calendarFormat: _calendarFormat,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                onDaySelected: _onDaySelected,
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
-                calendarStyle: CalendarStyle(
-                  outsideDaysVisible: false,
-                  weekendTextStyle:
-                      const TextStyle(color: Colors.lightGreenAccent),
-                  holidayTextStyle: const TextStyle(color: Colors.lime),
-                  todayDecoration: const BoxDecoration(
-                    color: Colors.lime,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedTextStyle: const TextStyle(color: Colors.white),
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.lime.shade400,
-                    shape: BoxShape.circle,
-                  ),
-                  defaultTextStyle: const TextStyle(color: Colors.white),
-                ),
-                headerStyle: const HeaderStyle(
-                  leftChevronIcon:
-                      Icon(Icons.arrow_back_ios, color: Colors.lime),
-                  rightChevronIcon:
-                      Icon(Icons.arrow_forward_ios, color: Colors.lime),
-                  titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-                  formatButtonVisible: false,
-                ),
-              ),
-            ),
-            buildRow('Brekfast'),
-            buildRow('Second brekfast'),
-            buildRow('Lunch'),
-            buildRow('Dinner'),
-            buildRow('Snack'),
-            buildRow('Supper'),
-          ],
-        ),
-      ),
     );
   }
 }
