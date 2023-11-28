@@ -1,7 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_me/calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'dart:async';
+import 'package:fit_me/widget_tree.dart';
 
-void main() {
+
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const FitMe());
 }
 
@@ -12,8 +19,7 @@ class FitMe extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: EventCalendarPage(),
-      // Add login module
+      home: const WidgetTree(),
     );
   }
 }
