@@ -1,6 +1,13 @@
+import 'package:fit_me/pages/article_detail_page.dart';
+import 'package:fit_me/pages/challenges_page.dart';
+import 'package:fit_me/pages/create_diet.dart';
+import 'package:fit_me/pages/home_page.dart';
+import 'package:fit_me/pages/login_register_page.dart';
+import 'package:fit_me/search_for_product.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'add_meal.dart';
+import 'package:fit_me/pages/article_page.dart';
 
 class EventCalendarPage extends StatefulWidget {
   const EventCalendarPage({Key? key}) : super(key: key);
@@ -15,6 +22,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   int _currentIndex = 0;
+  String mealChosen = '';
 
   @override
   void initState() {
@@ -101,6 +109,22 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
           setState(() {
             _currentIndex = index;
           });
+
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SearchForProduct()),
+            );
+          }
+
+          // Firebase - home_page, article_detail_page, article_page, challenges_page
+          // Think about layout of bottomNavigationBar in each page
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateDietPage()),
+            );
+          }
         },
       ),
       body: SingleChildScrollView(
