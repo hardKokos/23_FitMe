@@ -1,3 +1,4 @@
+import 'package:fit_me/pages/article_page.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'add_meal.dart';
@@ -35,6 +36,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
       });
     }
   }
+
 
   Widget buildRow(String text) {
     return Row(
@@ -95,14 +97,6 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[850],
-      bottomNavigationBar: MyBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -165,70 +159,3 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
   }
 }
 
-class MyBottomNavigationBar extends StatelessWidget {
-  final int currentIndex;
-  final void Function(int) onTap;
-
-  MyBottomNavigationBar({required this.currentIndex, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      showUnselectedLabels: true,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.lime.shade400,
-      onTap: onTap,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.calendar_month,
-            color: Colors.white,
-          ),
-          label: 'Home',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-          ),
-          label: 'Find product',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.create,
-            color: Colors.white,
-          ),
-          label: 'Create diet',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.directions_run,
-            color: Colors.white,
-          ),
-          label: 'Daily activities',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.coffee,
-            color: Colors.white,
-          ),
-          label: 'Water',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.shopping_bag,
-            color: Colors.white,
-          ),
-          label: 'Fit Shops',
-          backgroundColor: Colors.black,
-        ),
-      ],
-    );
-  }
-}

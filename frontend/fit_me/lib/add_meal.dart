@@ -1,3 +1,4 @@
+import 'package:fit_me/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'calendar.dart';
@@ -122,24 +123,9 @@ class _AddMealPageState extends State<AddMealPage> {
         backgroundColor: Colors.lime.shade400,
         centerTitle: true,
         elevation: 0.0,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
       ),
       backgroundColor: Colors.grey[850],
-      bottomNavigationBar: MyBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => EventCalendarPage()),
-            );
-          }
-        },
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

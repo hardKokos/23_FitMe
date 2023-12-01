@@ -46,6 +46,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
               style: const TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
+              color: Colors.black,
             )),
             SizedBox(width: 8),
             ElevatedButton(
@@ -53,12 +54,13 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                 toggleReadStatus();
               },
               style: ElevatedButton.styleFrom(
-              backgroundColor: isRead ? Colors.red[400] : null,
+              backgroundColor: isRead ? Colors.red[400] : Colors.green,
               ),
               child: Text(isRead ? 'Mark as Unread' : 'Mark as Read'),
             ),
           ],
         ),
+        backgroundColor: Colors.lime.shade400,
       ),
       body: SingleChildScrollView(
         child: Padding(
