@@ -6,6 +6,7 @@ import 'models/product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'search_for_product.dart';
+import 'pages/water_statistics.dart';
 
 // Here add a page with search bar to search api for products and display them with information
 class AddMealPage extends StatefulWidget {
@@ -151,6 +152,12 @@ class _AddMealPageState extends State<AddMealPage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CreateDietPage()),
+            );
+          }
+          if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WaterStatistics()),
             );
           }
         },

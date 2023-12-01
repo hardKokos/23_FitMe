@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'add_meal.dart';
 import 'package:fit_me/pages/article_page.dart';
+import 'pages/water_statistics.dart';
 
 class EventCalendarPage extends StatefulWidget {
   const EventCalendarPage({Key? key}) : super(key: key);
@@ -123,6 +124,13 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => CreateDietPage()),
+            );
+          }
+
+          if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WaterStatistics()),
             );
           }
         },

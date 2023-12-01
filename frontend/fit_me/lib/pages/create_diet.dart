@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fit_me/calendar.dart';
 import 'package:fit_me/search_for_product.dart';
+import 'package:fit_me/pages/water_statistics.dart';
 
 class CreateDietPage extends StatefulWidget {
   const CreateDietPage({Key? key}) : super(key: key);
@@ -60,6 +61,20 @@ class _CreateDietPageState extends State<CreateDietPage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => EventCalendarPage()),
+            );
+          }
+
+          if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WaterStatistics()),
+            );
+          }
+
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchForProduct()),
             );
           }
         },

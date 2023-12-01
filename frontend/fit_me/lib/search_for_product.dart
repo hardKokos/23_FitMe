@@ -6,6 +6,7 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:http/http.dart' as http;
 import 'calendar.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
+import 'pages/water_statistics.dart';
 
 class SearchForProduct extends StatefulWidget {
   const SearchForProduct({Key? key}) : super(key: key);
@@ -170,6 +171,12 @@ class _SearchForProductState extends State<SearchForProduct> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CreateDietPage()),
+            );
+          }
+          if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WaterStatistics()),
             );
           }
         },
