@@ -4,9 +4,9 @@ import 'package:fit_me/pages/create_diet.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:http/http.dart' as http;
-import 'calendar.dart';
+import '../calendar.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
-import 'pages/water_statistics.dart';
+import 'water_statistics.dart';
 
 class SearchForProduct extends StatefulWidget {
   const SearchForProduct({Key? key}) : super(key: key);
@@ -20,10 +20,6 @@ class _SearchForProductState extends State<SearchForProduct> {
   List<Product> products = [];
   int _currentIndex = 0;
   bool isSearchBarExpanded = false;
-
-  Widget _title() {
-    return const Text('FitMe');
-  }
 
   @override
   void dispose() {
@@ -85,7 +81,7 @@ class _SearchForProductState extends State<SearchForProduct> {
     showModalBottomSheet<Product>(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 1000,
           // color: Colors.amber,
           // child: Center(
@@ -176,7 +172,7 @@ class _SearchForProductState extends State<SearchForProduct> {
           if (index == 4) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => WaterStatistics()),
+              MaterialPageRoute(builder: (context) => const WaterStatistics()),
             );
           }
         },

@@ -43,13 +43,13 @@ class _LoginPageState extends State<LoginPage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: title,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           color: Colors.white,
         ),
-        enabledBorder: UnderlineInputBorder(
+        enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white), // Set border color
         ),
-        focusedBorder: UnderlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.lime), // Set border color
         ),
       ),
@@ -62,13 +62,13 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: true,
       decoration: InputDecoration(
         labelText: title,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           color: Colors.white,
         ),
-        enabledBorder: UnderlineInputBorder(
+        enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white), // Set border color
         ),
-        focusedBorder: UnderlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.lime), // Set border color
         ),
       ),
@@ -83,10 +83,10 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(
       onPressed:
           isLogin ? signInWithEmailAndPassword : createUserWithEmailAndPassword,
-      child: Text(isLogin ? 'Login' : 'Register'),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.lime.shade400,
       ),
+      child: Text(isLogin ? 'Login' : 'Register'),
     );
   }
 
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
         });
       },
       child: Text(isLogin ? 'Go to register' : 'Go to login',
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.lime,
           )),
     );
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _entryFieldLogin('email', _controllerEmail),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             _entryFieldPassword('password', _controllerPassword),
             _errorMessage(),
             _submitButton(),

@@ -2,23 +2,25 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 //OPAKUJ ELEMENTY LISTY W WIDGET CARD TAK SAMO ARTICLE PAGE
 
 class ChallengesPage extends StatelessWidget {
-  final ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+  final ConfettiController _confettiController =
+      ConfettiController(duration: const Duration(seconds: 1));
+
+  ChallengesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Available challenges'),
+        title: const Text('Available challenges'),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Challenges').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           var challengesData = snapshot.data!.docs;
           return ListView.builder(
@@ -29,14 +31,18 @@ class ChallengesPage extends StatelessWidget {
               var isCompleted = challengesData[index]['isCompleted'] ?? false;
 
               return ListTile(
-                  title: Text(title),
-                  subtitle: Text(text),
-                  trailing: ElevatedButton(
-                    onPressed: isCompleted ? null : () => completeChallenge(challengesData[index].id),
+                title: Text(title),
+                subtitle: Text(text),
+                trailing: ElevatedButton(
+                  onPressed: isCompleted
+                      ? null
+                      : () => completeChallenge(challengesData[index].id),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(isCompleted ? 'Challenge completed' : 'Complete challenge'),
+                      Text(isCompleted
+                          ? 'Challenge completed'
+                          : 'Complete challenge'),
                       ConfettiWidget(
                         confettiController: _confettiController,
                         blastDirectionality: BlastDirectionality.explosive,
@@ -44,8 +50,7 @@ class ChallengesPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                    
-                  ),
+                ),
               );
             },
           );
@@ -55,7 +60,10 @@ class ChallengesPage extends StatelessWidget {
   }
 
   void completeChallenge(String documentId) async {
-    await FirebaseFirestore.instance.collection('Challenges').doc(documentId).update({
+    await FirebaseFirestore.instance
+        .collection('Challenges')
+        .doc(documentId)
+        .update({
       'isCompleted': true,
     });
     _confettiController.play();

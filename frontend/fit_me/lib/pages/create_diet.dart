@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_me/calendar.dart';
-import 'package:fit_me/search_for_product.dart';
+import 'package:fit_me/pages/search_for_product.dart';
 import 'package:fit_me/pages/water_statistics.dart';
 
 class CreateDietPage extends StatefulWidget {
@@ -24,6 +24,7 @@ class _CreateDietPageState extends State<CreateDietPage> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +33,7 @@ class _CreateDietPageState extends State<CreateDietPage> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Adjusted text color
+            color: Colors.black,
           ),
         ),
         backgroundColor: Colors.lime.shade400,
@@ -47,34 +48,29 @@ class _CreateDietPageState extends State<CreateDietPage> {
           setState(() {
             _currentIndex = index;
           });
-
           if (index == 1) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const SearchForProduct()),
             );
           }
-
-          // Firebase - home_page, article_detail_page, article_page, challenges_page
-          // Think about layout of bottomNavigationBar in each page
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EventCalendarPage()),
+              MaterialPageRoute(
+                  builder: (context) => const EventCalendarPage()),
             );
           }
-
           if (index == 4) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => WaterStatistics()),
+              MaterialPageRoute(builder: (context) => const WaterStatistics()),
             );
           }
-
           if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SearchForProduct()),
+              MaterialPageRoute(builder: (context) => const SearchForProduct()),
             );
           }
         },

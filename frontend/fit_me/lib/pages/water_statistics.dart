@@ -1,7 +1,7 @@
 import 'package:fit_me/pages/create_diet.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_me/calendar.dart';
-import 'package:fit_me/search_for_product.dart';
+import 'package:fit_me/pages/search_for_product.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class WaterStatistics extends StatefulWidget {
@@ -40,6 +40,7 @@ class _WaterStatisticsState extends State<WaterStatistics> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     DateTime yearAgo = DateTime.now().subtract(const Duration(days: 365));
     return Scaffold(
@@ -58,7 +59,7 @@ class _WaterStatisticsState extends State<WaterStatistics> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[850],
-      body: Container(
+      body: SizedBox(
           height: double.infinity,
           width: double.infinity,
           child: Column(
@@ -140,30 +141,17 @@ class _WaterStatisticsState extends State<WaterStatistics> {
                             _waterAmount += 250;
                           });
                         },
-                        child: Text(
+                        style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          backgroundColor: Colors.lime.shade400,
+                        ),
+                        child: const Text(
                           "+ 250 ml",
                           style: TextStyle(
                             fontSize: 20,
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
-                          backgroundColor: Colors.lime.shade400,
-                        ),
                       ),
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: <Widget>[
-                      //     SizedBox(
-                      //         width: 100,
-                      //         child: TextField(
-                      //           controller: _controllerWaterToAdd,
-                      //
-                      //         )
-                      //     ),
-                      //
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),
@@ -183,9 +171,6 @@ class _WaterStatisticsState extends State<WaterStatistics> {
               MaterialPageRoute(builder: (context) => const SearchForProduct()),
             );
           }
-
-          // Firebase - home_page, article_detail_page, article_page, challenges_page
-          // Think about layout of bottomNavigationBar in each page
           if (index == 0) {
             Navigator.push(
               context,
@@ -193,7 +178,6 @@ class _WaterStatisticsState extends State<WaterStatistics> {
                   builder: (context) => const EventCalendarPage()),
             );
           }
-
           if (index == 2) {
             Navigator.push(
               context,

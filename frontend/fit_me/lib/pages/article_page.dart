@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ArticlePage extends StatelessWidget {
+  const ArticlePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +26,9 @@ class ArticlePage extends StatelessWidget {
               var isRead = articlesData[index]['isRead'];
               var documentId = articlesData[index].id;
               int maxTextLength = 40;
-              var truncatedText = text.length > maxTextLength ? text.substring(0, maxTextLength) + '...' : text;
+              var truncatedText = text.length > maxTextLength
+                  ? text.substring(0, maxTextLength) + '...'
+                  : text;
 
               return ListTile(
                 title: Text(title),
@@ -34,7 +38,8 @@ class ArticlePage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ArticleDetailPage(documentId: documentId ,title: title, text: text),
+                      builder: (context) => ArticleDetailPage(
+                          documentId: documentId, title: title, text: text),
                     ),
                   );
                 },

@@ -1,18 +1,18 @@
 import 'package:fit_me/pages/create_diet.dart';
 import 'package:flutter/material.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
-import 'calendar.dart';
-import 'models/product.dart';
+import '../calendar.dart';
+import '../models/product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'search_for_product.dart';
-import 'pages/water_statistics.dart';
+import 'water_statistics.dart';
 
-// Here add a page with search bar to search api for products and display them with information
 class AddMealPage extends StatefulWidget {
   const AddMealPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddMealPageState createState() => _AddMealPageState();
 }
 
@@ -61,7 +61,7 @@ class _AddMealPageState extends State<AddMealPage> {
         padding: const EdgeInsets.only(top: 8),
         child: Text(
           double.tryParse(text)?.toStringAsFixed(2) ?? text,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.normal,
             fontSize: 14,
@@ -72,46 +72,43 @@ class _AddMealPageState extends State<AddMealPage> {
   }
 
   Widget buildProductWidget(Product product) {
-    return Container(
-      //color: Colors.grey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 20, left: 8, right: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${product.label}',
-              style: TextStyle(
-                color: Colors.lime.shade400,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, bottom: 20, left: 8, right: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${product.label}',
+            style: TextStyle(
+              color: Colors.lime.shade400,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          Row(
+            children: [
+              buildText('${product.nutrients?.kcal} kcal'),
+              buildText('${product.nutrients?.protein} protein'),
+              buildText('${product.nutrients?.fat} fat'),
+              buildText('${product.nutrients?.carbs} carbs'),
+              buildText('${product.nutrients?.fiber} fiber'),
+              const Spacer(),
+              Checkbox(
+                value: product.isSelected ?? false,
+                onChanged: (bool? value) {
+                  setState(() {
+                    product.isSelected = value;
+                  });
+                },
               ),
-            ),
-            Row(
-              children: [
-                buildText('${product.nutrients?.kcal} kcal'),
-                buildText('${product.nutrients?.protein} protein'),
-                buildText('${product.nutrients?.fat} fat'),
-                buildText('${product.nutrients?.carbs} carbs'),
-                buildText('${product.nutrients?.fiber} fiber'),
-                Spacer(),
-                Checkbox(
-                  value: product.isSelected ?? false,
-                  onChanged: (bool? value) {
-                    // Decide if you want to add product to the meal
-                    setState(() {
-                      product.isSelected = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -120,7 +117,7 @@ class _AddMealPageState extends State<AddMealPage> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Adjusted text color
+            color: Colors.black,
           ),
         ),
         backgroundColor: Colors.lime.shade400,
@@ -139,7 +136,8 @@ class _AddMealPageState extends State<AddMealPage> {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EventCalendarPage()),
+              MaterialPageRoute(
+                  builder: (context) => const EventCalendarPage()),
             );
           }
           if (index == 1) {
@@ -157,7 +155,7 @@ class _AddMealPageState extends State<AddMealPage> {
           if (index == 4) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => WaterStatistics()),
+              MaterialPageRoute(builder: (context) => const WaterStatistics()),
             );
           }
         },
@@ -178,12 +176,10 @@ class _AddMealPageState extends State<AddMealPage> {
                   });
                 },
                 onSubmitted: (String product) {
-                  // Api call
                   searchForProduct(product);
                 },
               ),
             ),
-            // Build rows for food here?
             for (var product in products) buildProductWidget(product)
           ],
         ),
