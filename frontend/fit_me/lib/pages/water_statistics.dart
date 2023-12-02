@@ -13,7 +13,6 @@ class _WaterStatisticsState extends State<WaterStatistics> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  int _currentIndex = 0;
   int _waterAmount = 0;
   // final TextEditingController _controllerWaterToAdd = TextEditingController();
 

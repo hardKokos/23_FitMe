@@ -15,7 +15,6 @@ class SearchForProduct extends StatefulWidget {
 class _SearchForProductState extends State<SearchForProduct> {
   final productTextFieldController = TextEditingController();
   List<Product> products = [];
-  int _currentIndex = 0;
   bool isSearchBarExpanded = false;
 
   @override

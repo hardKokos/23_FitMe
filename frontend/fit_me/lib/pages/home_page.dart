@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
   Widget _userUid() {
     return Text(
       user?.email ?? 'User email',
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
     );
   }
 

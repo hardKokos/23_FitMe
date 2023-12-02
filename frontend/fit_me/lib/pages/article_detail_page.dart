@@ -51,7 +51,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 )),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () {
                 toggleReadStatus();

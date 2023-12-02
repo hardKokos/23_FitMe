@@ -2,30 +2,26 @@ import 'package:fit_me/calendar.dart';
 import 'package:fit_me/pages/article_page.dart';
 import 'package:fit_me/pages/challenges_page.dart';
 import 'package:fit_me/pages/home_page.dart';
+import 'package:fit_me/pages/search_for_product.dart';
 import 'package:fit_me/pages/water_statistics.dart';
-import 'package:fit_me/search_for_product.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
   @override
-  State<MainPage> createState() =>
-      _MainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState
-    extends State<MainPage> {
+class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
-      EventCalendarPage(),
-      SearchForProduct(),
-      ArticlePage(),
-      ChallengesPage(),
-      WaterStatistics(),
-      HomePage(),
+    const EventCalendarPage(),
+    const SearchForProduct(),
+    const ArticlePage(),
+    ChallengesPage(),
+    const WaterStatistics(),
+    HomePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -42,54 +38,54 @@ class _MainPageState
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-          icon: Icon(
-            Icons.calendar_month,
-            color: Colors.white,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.calendar_month,
+              color: Colors.white,
+            ),
+            label: 'Home',
+            backgroundColor: Colors.black,
           ),
-          label: 'Home',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            label: 'Find product',
+            backgroundColor: Colors.black,
           ),
-          label: 'Find product',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.create,
-            color: Colors.white,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.create,
+              color: Colors.white,
+            ),
+            label: 'Create diet',
+            backgroundColor: Colors.black,
           ),
-          label: 'Create diet',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.directions_run,
-            color: Colors.white,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.directions_run,
+              color: Colors.white,
+            ),
+            label: 'Daily activities',
+            backgroundColor: Colors.black,
           ),
-          label: 'Daily activities',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.coffee,
-            color: Colors.white,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.coffee,
+              color: Colors.white,
+            ),
+            label: 'Water',
+            backgroundColor: Colors.black,
           ),
-          label: 'Water',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.shopping_bag,
-            color: Colors.white,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.shopping_bag,
+              color: Colors.white,
+            ),
+            label: 'Account',
+            backgroundColor: Colors.black,
           ),
-          label: 'Account',
-          backgroundColor: Colors.black,
-        ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.lime.shade400,

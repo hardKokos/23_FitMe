@@ -14,7 +14,6 @@ class AddMealPage extends StatefulWidget {
 
 class _AddMealPageState extends State<AddMealPage> {
   TextEditingController textController = TextEditingController();
-  int _currentIndex = 0;
   List<Product> products = [];
   String product = '';
   bool isSearchBarExpanded = false;

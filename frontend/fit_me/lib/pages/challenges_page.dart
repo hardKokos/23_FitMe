@@ -48,7 +48,7 @@ class ChallengesPage extends StatelessWidget {
                   child: ListTile(
                     title: Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -56,7 +56,7 @@ class ChallengesPage extends StatelessWidget {
                     ),
                     subtitle: Text(
                       text,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     trailing: ElevatedButton(
                       onPressed: isCompleted
