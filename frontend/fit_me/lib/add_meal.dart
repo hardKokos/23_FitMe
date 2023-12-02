@@ -1,5 +1,4 @@
 import 'package:fit_me/pages/main_page.dart';
-import 'package:fit_me/pages/create_diet.dart';
 import 'package:flutter/material.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'calendar.dart';

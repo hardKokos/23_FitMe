@@ -1,7 +1,7 @@
 import 'package:fit_me/calendar.dart';
+import 'package:fit_me/pages/auth/auth.dart';
 import 'package:fit_me/pages/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_me/auth.dart';
 import 'package:fit_me/pages/home_page.dart';
 import 'package:fit_me/pages/login_register_page.dart';
 
@@ -21,7 +21,7 @@ class _WidgetTreeState extends State<WidgetTree>{
        builder: (context, snapshot){
         if(snapshot.hasData){
           //return HomePage();
-            return MainPage();
+            return const MainPage();
         }
         else{
           return const LoginPage();

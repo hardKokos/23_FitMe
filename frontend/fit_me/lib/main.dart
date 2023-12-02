@@ -3,10 +3,9 @@ import 'package:fit_me/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dart:async';
-import 'package:fit_me/widget_tree.dart';
+import 'package:fit_me/pages/auth/widget_tree.dart';
 
-
-Future main() async{
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const FitMe());

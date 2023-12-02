@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:fit_me/models/product.dart';
-import 'package:fit_me/pages/create_diet.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:http/http.dart' as http;
@@ -152,28 +151,6 @@ class _SearchForProductState extends State<SearchForProduct> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[850],
-      bottomNavigationBar: MyBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const EventCalendarPage()),
-            );
-          }
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CreateDietPage()),
-            );
-          }
-        },
-      ),
       body: Container(
         height: double.infinity,
         width: double.infinity,

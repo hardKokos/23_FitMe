@@ -2,6 +2,7 @@ import 'package:fit_me/calendar.dart';
 import 'package:fit_me/pages/article_page.dart';
 import 'package:fit_me/pages/challenges_page.dart';
 import 'package:fit_me/pages/home_page.dart';
+import 'package:fit_me/pages/water_statistics.dart';
 import 'package:fit_me/search_for_product.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class _MainPageState
       SearchForProduct(),
       ArticlePage(),
       ChallengesPage(),
-      EventCalendarPage(),
+      WaterStatistics(),
       HomePage(),
   ];
 
@@ -86,12 +87,12 @@ class _MainPageState
             Icons.shopping_bag,
             color: Colors.white,
           ),
-          label: 'Fit Shops',
+          label: 'Account',
           backgroundColor: Colors.black,
         ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.lime.shade400,
         onTap: _onItemTapped,
       ),
     );
