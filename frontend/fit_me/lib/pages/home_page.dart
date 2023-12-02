@@ -1,17 +1,17 @@
 import 'package:fit_me/pages/article_page.dart';
 import 'package:fit_me/pages/challenges_page.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_me/auth.dart';
+import 'package:fit_me/pages/auth/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class HomePage extends StatelessWidget{
-    HomePage({Key? key}) : super(key : key);
+class HomePage extends StatelessWidget {
+  HomePage({Key? key}) : super(key: key);
 
-    final User? user = Auth().currentUser;
+  final User? user = Auth().currentUser;
 
-    Future<void> signOut() async{
-      await Auth().signOut();
-    }
+  Future<void> signOut() async {
+    await Auth().signOut();
+  }
 
     Widget _userUid(){
       return Text(user?.email ?? 'User email', style: TextStyle( color: Colors.white),);
@@ -76,8 +76,7 @@ class HomePage extends StatelessWidget{
             // ),    
               ],
             ),
-            
-          ),
+        ),
       );
-    }
+  }
 }
