@@ -42,6 +42,9 @@ class _CreateDietPageState extends State<CreateDietPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[850],
+      body: const SingleChildScrollView(
+          //here add diets to choose from
+          ),
       bottomNavigationBar: MyBottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (int index) {
@@ -74,9 +77,6 @@ class _CreateDietPageState extends State<CreateDietPage> {
             );
           }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
       ),
     );
   }

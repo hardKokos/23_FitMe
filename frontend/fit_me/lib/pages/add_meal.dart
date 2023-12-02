@@ -1,4 +1,4 @@
-import 'package:fit_me/pages/create_diet.dart';
+import 'package:fit_me/pages/other_diets.dart';
 import 'package:flutter/material.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import '../calendar.dart';
@@ -88,10 +88,6 @@ class _AddMealPageState extends State<AddMealPage> {
           Row(
             children: [
               buildText('${product.nutrients?.kcal} kcal'),
-              buildText('${product.nutrients?.protein} protein'),
-              buildText('${product.nutrients?.fat} fat'),
-              buildText('${product.nutrients?.carbs} carbs'),
-              buildText('${product.nutrients?.fiber} fiber'),
               const Spacer(),
               Checkbox(
                 value: product.isSelected ?? false,

@@ -1,4 +1,4 @@
-import 'package:fit_me/pages/create_diet.dart';
+import 'package:fit_me/pages/other_diets.dart';
 import 'package:fit_me/pages/search_for_product.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -224,7 +224,7 @@ class MyBottomNavigationBar extends StatelessWidget {
             Icons.create,
             color: Colors.white,
           ),
-          label: 'Create diet',
+          label: 'Other diets',
           backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
