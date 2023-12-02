@@ -3,11 +3,11 @@ import 'package:fit_me/pages/article_detail_page.dart';
 import 'package:fit_me/pages/challenges_page.dart';
 import 'package:fit_me/pages/home_page.dart';
 import 'package:fit_me/pages/login_register_page.dart';
-import 'package:fit_me/search_for_product.dart';
+import 'package:fit_me/pages/search_for_product.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'add_meal.dart';
-import 'package:fit_me/pages/article_page.dart';
+import 'pages/add_meal.dart';
+import 'pages/water_statistics.dart';
 
 class EventCalendarPage extends StatefulWidget {
   const EventCalendarPage({Key? key}) : super(key: key);
@@ -43,7 +43,6 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
       });
     }
   }
-
 
   Widget buildRow(String text) {
     return Row(
@@ -95,7 +94,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Adjusted text color
+            color: Colors.black,
           ),
         ),
         backgroundColor: Colors.lime.shade400,
@@ -165,4 +164,3 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
     );
   }
 }
-
