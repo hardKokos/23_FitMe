@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'auth/auth.dart';
+import 'package:fit_me/models/waterStatisticsModel.dart';
 
 class WaterStatistics extends StatefulWidget {
   const WaterStatistics({Key? key}) : super(key: key);
@@ -10,11 +14,14 @@ class WaterStatistics extends StatefulWidget {
 }
 
 class _WaterStatisticsState extends State<WaterStatistics> {
+  final User? user = Auth().currentUser;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   int _waterAmount = 0;
-  // final TextEditingController _controllerWaterToAdd = TextEditingController();
+  late WaterStatisticsModel _statistics;
+  late String _statisticsId;
+  bool _statisticsExist = false;
 
   @override
   void initState() {
@@ -27,7 +34,57 @@ class _WaterStatisticsState extends State<WaterStatistics> {
     super.dispose();
   }
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  Future<List<DocumentSnapshot>> fetchData() async {
+    DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('waterStatistics')
+        .where('uid', isEqualTo: user?.uid)
+        .where('date', isEqualTo: date)
+        .get();
+
+    return snapshot.docs;
+  }
+
+  Future<void> updateWaterStatistic() async {
+    setState(() {
+      _waterAmount += 250;
+    });
+
+    if(_statisticsExist) {
+      await FirebaseFirestore.instance
+          .collection('waterStatistics')
+          .doc(_statisticsId)
+          .update({'waterAmount' : _waterAmount});
+    }
+    else {
+      DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
+      Map<String, dynamic> data = {
+        'uid': user?.uid,
+        'date': date,
+        'waterAmount': _waterAmount
+      };
+
+      DocumentReference documentReference = await FirebaseFirestore.instance.collection('waterStatistics').add(data);
+      _statisticsExist = true;
+      _statisticsId = documentReference.id;
+    }
+  }
+
+  void _displayWaterStatistics(List<DocumentSnapshot> snapshots) {
+    if(snapshots.isEmpty) {
+      _waterAmount = 0;
+      _statisticsExist = false;
+    }
+    else {
+      _statisticsId =  snapshots[0].id;
+      _statistics = WaterStatisticsModel.fromJson(snapshots[0].data() as Map<String, dynamic>);
+      _waterAmount = _statistics.waterAmount!;
+      _statisticsExist = true;
+    }
+  }
+
+
+  Future<void> _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
@@ -105,53 +162,67 @@ class _WaterStatisticsState extends State<WaterStatistics> {
                   formatButtonVisible: false,
                 ),
               ),
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 50.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        _waterAmount.toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 70,
+              FutureBuilder<List<DocumentSnapshot>> (
+                future: fetchData(),
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  else if(snapshot.hasError) {
+                    return const Center(
+                      child: Text("Error has occurred..."),
+                    );
+                  }
+                  else {
+                    _displayWaterStatistics(snapshot.requireData);
+                    return Center(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 50.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              _waterAmount.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 70,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text(
+                              "/ 2000 ml",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 50,
+                            ),
+                            ElevatedButton(
+                              onPressed: updateWaterStatistic,
+                              style: ElevatedButton.styleFrom(
+                                shape: const StadiumBorder(),
+                                backgroundColor: Colors.lime.shade400,
+                              ),
+                              child: const Text(
+                                "+ 250 ml",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        "/ 2000 ml",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _waterAmount += 250;
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          backgroundColor: Colors.lime.shade400,
-                        ),
-                        child: const Text(
-                          "+ 250 ml",
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+                    );
+                  }
+                }
+              ),
             ],
           )),
     );
