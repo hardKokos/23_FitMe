@@ -1,13 +1,6 @@
-import 'package:fit_me/pages/article_detail_page.dart';
-import 'package:fit_me/pages/challenges_page.dart';
-import 'package:fit_me/pages/create_diet.dart';
-import 'package:fit_me/pages/home_page.dart';
-import 'package:fit_me/pages/login_register_page.dart';
-import 'package:fit_me/search_for_product.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'add_meal.dart';
-import 'package:fit_me/pages/article_page.dart';
+import 'pages/add_meal.dart';
 
 class EventCalendarPage extends StatefulWidget {
   const EventCalendarPage({Key? key}) : super(key: key);
@@ -21,7 +14,6 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  int _currentIndex = 0;
   String mealChosen = '';
 
   @override
@@ -94,7 +86,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Adjusted text color
+            color: Colors.black,
           ),
         ),
         backgroundColor: Colors.lime.shade400,
@@ -103,30 +95,6 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[850],
-      bottomNavigationBar: MyBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SearchForProduct()),
-            );
-          }
-
-          // Firebase - home_page, article_detail_page, article_page, challenges_page
-          // Think about layout of bottomNavigationBar in each page
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateDietPage()),
-            );
-          }
-        },
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -185,74 +153,6 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class MyBottomNavigationBar extends StatelessWidget {
-  final int currentIndex;
-  final void Function(int) onTap;
-
-  MyBottomNavigationBar({required this.currentIndex, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      showUnselectedLabels: true,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.lime.shade400,
-      onTap: onTap,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.calendar_month,
-            color: Colors.white,
-          ),
-          label: 'Home',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-          ),
-          label: 'Find product',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.create,
-            color: Colors.white,
-          ),
-          label: 'Create diet',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.directions_run,
-            color: Colors.white,
-          ),
-          label: 'Daily activities',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.coffee,
-            color: Colors.white,
-          ),
-          label: 'Water',
-          backgroundColor: Colors.black,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.shopping_bag,
-            color: Colors.white,
-          ),
-          label: 'Fit Shops',
-          backgroundColor: Colors.black,
-        ),
-      ],
     );
   }
 }

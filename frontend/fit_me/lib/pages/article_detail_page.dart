@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-
 class ArticleDetailPage extends StatefulWidget {
   final String documentId;
   final String title;
   final String text;
 
-  ArticleDetailPage({required this.documentId, required this.title, required this.text});
+  const ArticleDetailPage(
+      {super.key,
+      required this.documentId,
+      required this.title,
+      required this.text});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ArticleDetailPageState createState() => _ArticleDetailPageState();
 }
 
@@ -20,8 +23,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   @override
   void initState() {
     super.initState();
-    
-    isRead = false; //jeśli początkowa wartość isRead == true, to najpierw wyświetli się jako isRead == false, a po chwili wygląd zmienia na isRead==true
+
+    isRead =
+        false; //jeśli początkowa wartość isRead == true, to najpierw wyświetli się jako isRead == false, a po chwili wygląd zmienia na isRead==true
     FirebaseFirestore.instance
         .collection('Articles')
         .doc(widget.documentId)
@@ -41,24 +45,25 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       appBar: AppBar(
         title: Row(
           children: [
-            Text(
-              widget.title,
-              style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            )),
-            SizedBox(width: 8),
+            Text(widget.title,
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                )),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () {
                 toggleReadStatus();
               },
               style: ElevatedButton.styleFrom(
-              backgroundColor: isRead ? Colors.red[400] : null,
+                backgroundColor: isRead ? Colors.red[400] : Colors.green,
               ),
               child: Text(isRead ? 'Mark as Unread' : 'Mark as Read'),
             ),
           ],
         ),
+        backgroundColor: Colors.lime.shade400,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -66,10 +71,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Text(
                 widget.text,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                 ),
               ),
