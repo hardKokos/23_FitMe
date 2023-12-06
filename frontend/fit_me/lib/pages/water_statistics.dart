@@ -26,7 +26,17 @@ class _WaterStatisticsState extends State<WaterStatistics> {
   @override
   void initState() {
     super.initState();
+    print("XDinistate");
     _selectedDay = _focusedDay;
+    DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
+    FirebaseFirestore.instance
+        .collection('waterStatistics')
+        .where('uid', isEqualTo: user?.uid)
+        .where('date', isEqualTo: date)
+        .get()
+        .then((snapshots) {
+          _displayWaterStatistics(snapshots.docs);
+        });
   }
 
   @override
@@ -72,14 +82,18 @@ class _WaterStatisticsState extends State<WaterStatistics> {
 
   void _displayWaterStatistics(List<DocumentSnapshot> snapshots) {
     if(snapshots.isEmpty) {
-      _waterAmount = 0;
       _statisticsExist = false;
+      setState(() {
+        _waterAmount = 0;
+      });
     }
     else {
       _statisticsId =  snapshots[0].id;
       _statistics = WaterStatisticsModel.fromJson(snapshots[0].data() as Map<String, dynamic>);
-      _waterAmount = _statistics.waterAmount!;
       _statisticsExist = true;
+      setState(() {
+        _waterAmount = _statistics.waterAmount!;
+      });
     }
   }
 
@@ -90,6 +104,8 @@ class _WaterStatisticsState extends State<WaterStatistics> {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
       });
+
+      _displayWaterStatistics(await fetchData());
     }
   }
 
@@ -162,66 +178,67 @@ class _WaterStatisticsState extends State<WaterStatistics> {
                   formatButtonVisible: false,
                 ),
               ),
-              FutureBuilder<List<DocumentSnapshot>> (
-                future: fetchData(),
-                builder: (context, snapshot) {
-                  if(snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  else if(snapshot.hasError) {
-                    return const Center(
-                      child: Text("Error has occurred..."),
-                    );
-                  }
-                  else {
-                    _displayWaterStatistics(snapshot.requireData);
-                    return Center(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 50.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              _waterAmount.toString(),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 70,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const Text(
-                              "/ 2000 ml",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            ElevatedButton(
-                              onPressed: updateWaterStatistic,
-                              style: ElevatedButton.styleFrom(
-                                shape: const StadiumBorder(),
-                                backgroundColor: Colors.lime.shade400,
-                              ),
-                              child: const Text(
-                                "+ 250 ml",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ],
+              // FutureBuilder<List<DocumentSnapshot>> (
+              //   future: fetchData(),
+              //   builder: (context, snapshot) {
+              //     if(snapshot.connectionState == ConnectionState.waiting) {
+              //       return const Center(
+              //         child: CircularProgressIndicator(),
+              //       );
+              //     }
+              //     else if(snapshot.hasError) {
+              //       return const Center(
+              //         child: Text("Error has occurred..."),
+              //       );
+              //     }
+              //     else {
+              //       _displayWaterStatistics(snapshot.requireData);
+              //       return
+              //     }
+              //   }
+              // ),
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 50.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        _waterAmount.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 70,
                         ),
                       ),
-                    );
-                  }
-                }
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        "/ 2000 ml",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      ElevatedButton(
+                        onPressed: updateWaterStatistic,
+                        style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          backgroundColor: Colors.lime.shade400,
+                        ),
+                        child: const Text(
+                          "+ 250 ml",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           )),
