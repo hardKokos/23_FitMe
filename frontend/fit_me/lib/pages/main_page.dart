@@ -2,6 +2,7 @@ import 'package:fit_me/calendar.dart';
 import 'package:fit_me/pages/article_page.dart';
 import 'package:fit_me/pages/challenges_page.dart';
 import 'package:fit_me/pages/home_page.dart';
+import 'package:fit_me/pages/shop_page.dart';
 import 'package:fit_me/pages/water_statistics.dart';
 import 'package:fit_me/search_for_product.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,8 @@ class _MainPageState
       ArticlePage(),
       ChallengesPage(),
       WaterStatistics(),
-      HomePage(),
+      ShopPage(),
+            //HomePage(),
   ];
 
   void _onItemTapped(int index) {
