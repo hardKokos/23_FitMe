@@ -3,13 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'auth/auth.dart';
+import 'package:fit_me/pages/circle_progress_indicator.dart';
 import 'package:fit_me/models/waterStatisticsModel.dart';
 
 class WaterStatistics extends StatefulWidget {
   const WaterStatistics({Key? key}) : super(key: key);
 
   @override
-  _WaterStatisticsState createState() => _WaterStatisticsState();
+  State<WaterStatistics> createState() => _WaterStatisticsState();
 }
 
 class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderStateMixin {
@@ -18,6 +19,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   int _waterAmount = 0;
+  int _waterGoal = 2000;
   late WaterStatisticsModel _statistics;
   late String _statisticsId;
   bool _statisticsExist = false;
@@ -228,40 +230,45 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
               // ),
               Center(
                 child: Container(
-                  margin: const EdgeInsets.only(top: 50.0),
+                  margin: const EdgeInsets.only(top: 30.0),
                   child: Column(
                     children: [
                       AnimatedBuilder(
                         animation: _animation,
                         builder: (context, child) {
-                          return Text(
-                            _animation.value.toStringAsFixed(0),
-                              // _waterAmount.toString(),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 70,
+                          return CustomPaint(
+                            foregroundPainter: CircleProgressIndicator(_animation.value, _waterGoal),
+                            child: SizedBox(
+                              width: 300,
+                              height: 300,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _animation.value.toString(),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 70,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      '/ $_waterGoal ml',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
+                            ),
                           );
                         },
-                      ),
-                      // Text(
-                      //   _waterAmount.toString(),
-                      //   textAlign: TextAlign.center,
-                      //   style: const TextStyle(
-                      //     color: Colors.white,
-                      //     fontSize: 70,
-                      //   ),
-                      // ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        "/ 2000 ml",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                        ),
                       ),
                       const SizedBox(
                         height: 50,
@@ -270,7 +277,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                         onPressed: updateWaterStatistic,
                         style: ElevatedButton.styleFrom(
                           shape: const StadiumBorder(),
-                          backgroundColor: Colors.lime.shade400,
+                          backgroundColor: Colors.blueAccent,
                         ),
                         child: const Text(
                           "+ 250 ml",
