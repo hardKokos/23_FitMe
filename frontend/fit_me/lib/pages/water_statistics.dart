@@ -9,11 +9,10 @@ class WaterStatistics extends StatefulWidget {
   const WaterStatistics({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _WaterStatisticsState createState() => _WaterStatisticsState();
 }
 
-class _WaterStatisticsState extends State<WaterStatistics> {
+class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderStateMixin {
   final User? user = Auth().currentUser;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
@@ -22,12 +21,25 @@ class _WaterStatisticsState extends State<WaterStatistics> {
   late WaterStatisticsModel _statistics;
   late String _statisticsId;
   bool _statisticsExist = false;
+  late AnimationController _animationController;
+  late Animation<int> _animation;
+  late int _oldValue;
+  late int _newValue;
 
   @override
   void initState() {
     super.initState();
-    print("XDinistate");
     _selectedDay = _focusedDay;
+    _oldValue = 0;
+    _newValue = 0;
+
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+
+    _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
+
     DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
     FirebaseFirestore.instance
         .collection('waterStatistics')
@@ -41,6 +53,7 @@ class _WaterStatisticsState extends State<WaterStatistics> {
 
   @override
   void dispose() {
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -57,8 +70,13 @@ class _WaterStatisticsState extends State<WaterStatistics> {
 
   Future<void> updateWaterStatistic() async {
     setState(() {
+      _oldValue = _waterAmount;
+      _newValue = _waterAmount + 250;
       _waterAmount += 250;
     });
+
+    _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
+    _animationController.forward(from: 0.0);
 
     if(_statisticsExist) {
       await FirebaseFirestore.instance
@@ -83,17 +101,28 @@ class _WaterStatisticsState extends State<WaterStatistics> {
   void _displayWaterStatistics(List<DocumentSnapshot> snapshots) {
     if(snapshots.isEmpty) {
       _statisticsExist = false;
+      _newValue = 0;
       setState(() {
         _waterAmount = 0;
       });
+
+      _animation = IntTween(begin: _oldValue, end: 0).animate(_animationController);
+      _animationController.forward(from: 0.0);
+      _oldValue = 0;
     }
     else {
       _statisticsId =  snapshots[0].id;
       _statistics = WaterStatisticsModel.fromJson(snapshots[0].data() as Map<String, dynamic>);
       _statisticsExist = true;
+      _oldValue = _waterAmount;
+      _newValue = _statistics.waterAmount!;
+      _animationController.forward();
       setState(() {
         _waterAmount = _statistics.waterAmount!;
       });
+      _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
+      _animationController.forward(from: 0.0);
+      _oldValue = _newValue;
     }
   }
 
@@ -202,14 +231,28 @@ class _WaterStatisticsState extends State<WaterStatistics> {
                   margin: const EdgeInsets.only(top: 50.0),
                   child: Column(
                     children: [
-                      Text(
-                        _waterAmount.toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 70,
-                        ),
+                      AnimatedBuilder(
+                        animation: _animation,
+                        builder: (context, child) {
+                          return Text(
+                            _animation.value.toStringAsFixed(0),
+                              // _waterAmount.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 70,
+                              ),
+                          );
+                        },
                       ),
+                      // Text(
+                      //   _waterAmount.toString(),
+                      //   textAlign: TextAlign.center,
+                      //   style: const TextStyle(
+                      //     color: Colors.white,
+                      //     fontSize: 70,
+                      //   ),
+                      // ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -244,4 +287,7 @@ class _WaterStatisticsState extends State<WaterStatistics> {
           )),
     );
   }
+
+
+
 }
