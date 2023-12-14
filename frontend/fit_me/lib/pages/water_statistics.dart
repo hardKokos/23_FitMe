@@ -80,11 +80,21 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
     return snapshot.docs;
   }
 
-  Future<void> updateWaterStatistic() async {
+  Future<void> updateWaterStatistic(int value) async {
+    if(_waterAmount == 0 && value < 0) {
+      return;
+    }
+
     setState(() {
       _oldValue = _waterAmount;
-      _newValue = _waterAmount + _cupSize;
-      _waterAmount += _cupSize;
+      _newValue = _waterAmount + value;
+      if(_newValue < 0) {
+        _newValue = 0;
+        _waterAmount = 0;
+      }
+      else {
+        _waterAmount += value;
+      }
     });
 
     _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
@@ -95,6 +105,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
           .collection('waterStatistics')
           .doc(_statisticsId)
           .update({'waterAmount' : _waterAmount});
+      print("XDDD");
     }
     else {
       DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
@@ -160,7 +171,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Adjusted text color
+            color: Colors.black,
           ),
         ),
         backgroundColor: Colors.lime.shade400,
@@ -201,7 +212,6 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                   context,
                   MaterialPageRoute(builder: (context) => WaterGoalSettings(waterGoal: _waterGoal)),
                 ).then((result) {
-                  // Wywołane po powrocie z Navigator.pop
                   if (result != null) {
                     setState(() {
                       _waterGoal = result;
@@ -277,25 +287,6 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                   formatButtonVisible: false,
                 ),
               ),
-              // FutureBuilder<List<DocumentSnapshot>> (
-              //   future: fetchData(),
-              //   builder: (context, snapshot) {
-              //     if(snapshot.connectionState == ConnectionState.waiting) {
-              //       return const Center(
-              //         child: CircularProgressIndicator(),
-              //       );
-              //     }
-              //     else if(snapshot.hasError) {
-              //       return const Center(
-              //         child: Text("Error has occurred..."),
-              //       );
-              //     }
-              //     else {
-              //       _displayWaterStatistics(snapshot.requireData);
-              //       return
-              //     }
-              //   }
-              // ),
               Center(
                 child: Container(
                   margin: const EdgeInsets.only(top: 30.0),
@@ -341,19 +332,36 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                       const SizedBox(
                         height: 50,
                       ),
-                      ElevatedButton(
-                        onPressed: updateWaterStatistic,
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          backgroundColor: Colors.blueAccent,
-                        ),
-                        child: Text(
-                          "+ $_cupSize ml",
-                          style: const TextStyle(
-                            fontSize: 20,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () => updateWaterStatistic(-_cupSize),
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(12),
+                            ),
+                            child: const Icon(Icons.remove),
                           ),
-                        ),
-                      ),
+                          const SizedBox(width: 16),
+                          Text(
+                            "$_cupSize ml",
+                            style: const TextStyle(
+                                fontSize: 25,
+                                color: Colors.white
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          ElevatedButton(
+                            onPressed: () => updateWaterStatistic(_cupSize),
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(12),
+                            ),
+                            child: const Icon(Icons.add),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),

@@ -90,7 +90,6 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
                     onPressed: () {
                       setState(() {
                         isValueChanged = false;
-
                         FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
                           querySnapshot.docs.forEach((doc) {
                             FirebaseFirestore.instance.collection('Users').doc(doc.id).update({
@@ -108,7 +107,6 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
                       backgroundColor: Colors.blueAccent,
                     ),
                     child: const Text('Apply'),
-
                   ) : const SizedBox(),
                 ],
               )

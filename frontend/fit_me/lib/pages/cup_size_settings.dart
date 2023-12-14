@@ -91,7 +91,6 @@ class _CupSizeSettingsState extends State<CupSizeSettings> {
                     onPressed: () {
                       setState(() {
                         isValueChanged = false;
-
                         FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
                           querySnapshot.docs.forEach((doc) {
                             FirebaseFirestore.instance.collection('Users').doc(doc.id).update({
@@ -109,93 +108,12 @@ class _CupSizeSettingsState extends State<CupSizeSettings> {
                       backgroundColor: Colors.blueAccent,
                     ),
                     child: const Text('Apply'),
-
                   ) : const SizedBox(),
                 ],
               ),
             )
           ],
         ),
-    //     child: Center(
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         children: [
-    //           const Text(
-    //             'Set the size of your cup.',
-    //             style: TextStyle(
-    //               color: Colors.white,
-    //               fontSize: 17,
-    //             ),
-    //           ),
-    //           const SizedBox(height: 50,),
-    //           // Slider(
-    //           //   value: _waterGoal,
-    //           //   min: 0,
-    //           //   max: 100,
-    //           //   onChanged: (value) {
-    //           //     setState(() {
-    //           //       _waterGoal = value;
-    //           //     });
-    //           //   },
-    //           // ),
-    //     //       NumberPicker(
-    //     //           minValue: 100,
-    //     //           maxValue: 500,
-    //     //           step: 50,
-    //     //           value: _setValue,
-    //     //           onChanged: (value) {
-    //     //             setState(() {
-    //     //               _setValue = value;
-    //     //               if(_setValue != _cupSize) {
-    //     //                 isValueChanged = true;
-    //     //               }
-    //     //               else {
-    //     //                 isValueChanged = false;
-    //     //               }
-    //     //             });
-    //     //           },
-    //     //           textStyle: const TextStyle(
-    //     //             color: Colors.white,
-    //     //             fontSize: 19,
-    //     //           )
-    //     //       ),
-    //     //       const SizedBox(height: 30,),
-    //     //       const Text(
-    //     //         'Cup size (ml)',
-    //     //         style: TextStyle(
-    //     //           color: Colors.grey,
-    //     //           fontSize: 10,
-    //     //         ),
-    //     //       ),
-    //     //       const SizedBox(height: 30,),
-    //     //       isValueChanged
-    //     //           ? ElevatedButton(
-    //     //         onPressed: () {
-    //     //           setState(() {
-    //     //             isValueChanged = false;
-    //     //
-    //     //             FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
-    //     //               querySnapshot.docs.forEach((doc) {
-    //     //                 FirebaseFirestore.instance.collection('Users').doc(doc.id).update({
-    //     //                   'cupSize': _setValue,
-    //     //                 });
-    //     //               });
-    //     //             });
-    //     //             _cupSize = _setValue;
-    //     //             Navigator.pop(context, _cupSize);
-    //     //
-    //     //           });
-    //     //         },
-    //     //         style: ElevatedButton.styleFrom(
-    //     //           shape: const StadiumBorder(),
-    //     //           backgroundColor: Colors.blueAccent,
-    //     //         ),
-    //     //         child: const Text('Apply'),
-    //     //
-    //     //       ) : const SizedBox(),
-    //     //     ],
-    //     //   ),
-    //     // ),
       ),
     );
   }
