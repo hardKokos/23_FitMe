@@ -25,8 +25,10 @@ class _DietPageState extends State<DietPage> {
         centerTitle: true,
         elevation: 0.0,
       ),
+      backgroundColor: Colors.grey[850],
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('DietProducts').snapshots(),
+        stream:
+        FirebaseFirestore.instance.collection('DietProducts').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return CircularProgressIndicator();
@@ -68,7 +70,8 @@ class _DietPageState extends State<DietPage> {
               children: [
                 buildPageSelectionMenu(),
                 buildCategoryCard('Breakfast', selectedDietBreakfast),
-                buildCategoryCard('Second Breakfast', selectedDietSecondBreakfast),
+                buildCategoryCard(
+                    'Second Breakfast', selectedDietSecondBreakfast),
                 buildCategoryCard('Lunch', selectedDietLunch),
                 buildCategoryCard('Snack', selectedDietSnack),
                 buildCategoryCard('Dinner', selectedDietDinner),
@@ -86,20 +89,27 @@ class _DietPageState extends State<DietPage> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          Text(
+          const Text(
             'Select Diet:',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           DropdownButton<String>(
             value: selectedDiet,
+            dropdownColor: Colors.grey[800],
             items: ['1', '2', '3'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               );
             }).toList(),
             onChanged: (String? newValue) {
@@ -113,63 +123,104 @@ class _DietPageState extends State<DietPage> {
     );
   }
 
-Widget buildCategoryCard(String category, List<DocumentSnapshot> products) {
-  return Card(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                category,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              buildAddButton(category, products),
-            ],
-          ),
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            var productName = products[index]['name'];
-            var productImage = products[index]['image'];
-            var productKcal = products[index]['KCAL'];
-            var productProtein = products[index]['PROTEIN'];
-            var productCarbs = products[index]['CARBS'];
-            var productFat = products[index]['FAT'];
-
-            return ListTile(
-              title: Text(productName),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(
-                    productImage,
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
+  Widget buildCategoryCard(String category, List<DocumentSnapshot> products) {
+    return Card(
+      color: Colors.grey[800],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  category,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text('KCAL: $productKcal'),
-                  Text('Protein: $productProtein'),
-                  Text('Carbs: $productCarbs'),
-                  Text('Fat: $productFat'),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}
+                ),
+                buildAddButton(category, products),
+              ],
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              var productName = products[index]['name'];
+              var productImage = products[index]['image'];
+              var productKcal = products[index]['KCAL'];
+              var productProtein = products[index]['PROTEIN'];
+              var productCarbs = products[index]['CARBS'];
+              var productFat = products[index]['FAT'];
+
+              return ListTile(
+                title: Text(
+                  productName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                subtitle: Column(
+                  children: [
+                    const SizedBox(height: 20,),
+                    Row(
+                      children: [
+                        Image.network(
+                          productImage,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        const SizedBox(width: 30,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Kcal: $productKcal',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 5,),
+                            Text(
+                              'Protein: $productProtein',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 5,),
+                            Text(
+                              'Carbs: $productCarbs',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 5,),
+                            Text(
+                              'Fat: $productFat',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 20,),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget buildAddButton(String category, List<DocumentSnapshot> products) {
     return Padding(
@@ -192,12 +243,28 @@ Widget buildCategoryCard(String category, List<DocumentSnapshot> products) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Product to $category'),
+          backgroundColor: Colors.grey[800],
+          title: Text(
+            'Add Product to $category',
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
           content: Column(
             children: [
-              Text('Category: $category'),
-              SizedBox(height: 10),
-              Text('Products:'),
+              Text(
+                'Category: $category',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Products:',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
               buildProductList(products),
             ],
           ),
@@ -206,7 +273,7 @@ Widget buildCategoryCard(String category, List<DocumentSnapshot> products) {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -219,7 +286,12 @@ Widget buildCategoryCard(String category, List<DocumentSnapshot> products) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: products.map((product) {
         var productName = product['name'];
-        return Text('- $productName');
+        return Text(
+          '- $productName',
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        );
       }).toList(),
     );
   }
