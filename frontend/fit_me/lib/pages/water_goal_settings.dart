@@ -47,71 +47,72 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
               ),
             ),
             const SizedBox(height: 50,),
-            // Slider(
-            //   value: _waterGoal,
-            //   min: 0,
-            //   max: 100,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       _waterGoal = value;
-            //     });
-            //   },
-            // ),
-            NumberPicker(
-              minValue: 500,
-              maxValue: 6000,
-              step: 100,
-              value: _setValue,
-              onChanged: (value) {
-                setState(() {
-                  _setValue = value;
-                  if(_setValue != _waterGoal) {
-                    isValueChanged = true;
-                  }
-                  else {
-                    isValueChanged = false;
-                  }
-                });
-              },
-              textStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 19,
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  NumberPicker(
+                      minValue: 500,
+                      maxValue: 6000,
+                      step: 100,
+                      value: _setValue,
+                      onChanged: (value) {
+                        setState(() {
+                          _setValue = value;
+                          if(_setValue != _waterGoal) {
+                            isValueChanged = true;
+                          }
+                          else {
+                            isValueChanged = false;
+                          }
+                        });
+                      },
+                    selectedTextStyle: const TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 29,
+                    ),
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
+                  ),
+                  const SizedBox(height: 30,),
+                  const Text(
+                    'Daily water intake (ml)',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 30,),
+                  isValueChanged
+                      ? ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        isValueChanged = false;
+
+                        FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
+                          querySnapshot.docs.forEach((doc) {
+                            FirebaseFirestore.instance.collection('Users').doc(doc.id).update({
+                              'waterGoal': _setValue,
+                            });
+                          });
+                        });
+                        _waterGoal = _setValue;
+                        Navigator.pop(context, _waterGoal);
+
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      backgroundColor: Colors.blueAccent,
+                    ),
+                    child: const Text('Apply'),
+
+                  ) : const SizedBox(),
+                ],
               )
             ),
-            const SizedBox(height: 30,),
-            const Text(
-              'Daily water intake (ml)',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 10,
-              ),
-            ),
-            const SizedBox(height: 30,),
-            isValueChanged
-            ? ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isValueChanged = false;
-
-                    FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
-                      querySnapshot.docs.forEach((doc) {
-                        FirebaseFirestore.instance.collection('Users').doc(doc.id).update({
-                          'waterGoal': _setValue,
-                        });
-                      });
-                    });
-                    _waterGoal = _setValue;
-                    Navigator.pop(context, _waterGoal);
-
-                  });
-                },
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-                backgroundColor: Colors.blueAccent,
-              ),
-                child: const Text('Apply'),
-
-            ) : const SizedBox(),
           ],
         ),
       ),

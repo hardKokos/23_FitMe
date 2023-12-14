@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fit_me/pages/cup_size_settings.dart';
 import 'package:fit_me/pages/water_goal_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -22,6 +23,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
   DateTime? _selectedDay;
   int _waterAmount = 0;
   int _waterGoal = 2000;
+  int _cupSize = 250;
   late WaterStatisticsModel _statistics;
   late String _statisticsId;
   bool _statisticsExist = false;
@@ -47,6 +49,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
     FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
       _userDocumentId = querySnapshot.docs[0].id;
       _waterGoal = (querySnapshot.docs[0].data() as Map<String, dynamic>)['waterGoal'];
+      _cupSize = (querySnapshot.docs[0].data() as Map<String, dynamic>)['cupSize'];
     });
 
     DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
@@ -80,8 +83,8 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
   Future<void> updateWaterStatistic() async {
     setState(() {
       _oldValue = _waterAmount;
-      _newValue = _waterAmount + 250;
-      _waterAmount += 250;
+      _newValue = _waterAmount + _cupSize;
+      _waterAmount += _cupSize;
     });
 
     _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
@@ -166,14 +169,27 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
         automaticallyImplyLeading: false,
         actions: [
           PopupMenuButton(
+            color: Colors.grey[850],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 8,
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
                   value: 'setTarget',
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
                   child: Text('Set target'),
                 ),
                 const PopupMenuItem(
                   value: 'setCupSize',
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
                   child: Text('Set cup size'),
                 ),
 
@@ -194,10 +210,19 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                 });
               }
               else if(value == 'setCupSize') {
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CupSizeSettings(cupSize: _cupSize)),
+                ).then((result) {
+                  if (result != null) {
+                    setState(() {
+                      _cupSize = result;
+                    });
+                  }
+                });
               }
             },
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
           ),
         ],
       ),
@@ -322,9 +347,9 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                           shape: const StadiumBorder(),
                           backgroundColor: Colors.blueAccent,
                         ),
-                        child: const Text(
-                          "+ 250 ml",
-                          style: TextStyle(
+                        child: Text(
+                          "+ $_cupSize ml",
+                          style: const TextStyle(
                             fontSize: 20,
                           ),
                         ),
