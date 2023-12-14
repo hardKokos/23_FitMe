@@ -338,6 +338,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                           ElevatedButton(
                             onPressed: () => updateWaterStatistic(-_cupSize),
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
                               shape: const CircleBorder(),
                               padding: const EdgeInsets.all(12),
                             ),
@@ -355,6 +356,7 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                           ElevatedButton(
                             onPressed: () => updateWaterStatistic(_cupSize),
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
                               shape: const CircleBorder(),
                               padding: const EdgeInsets.all(12),
                             ),
