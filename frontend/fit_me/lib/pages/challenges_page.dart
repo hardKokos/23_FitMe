@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChallengesPage extends StatelessWidget {
-  final ConfettiController _confettiController =
-      ConfettiController(duration: const Duration(seconds: 1));
 
-  ChallengesPage({super.key});
+class ChallengesPage extends StatelessWidget {
+  final ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 1));
 
   @override
   Widget build(BuildContext context) {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -26,7 +26,6 @@ class ChallengesPage extends StatelessWidget {
         elevation: 0.0,
       ),
       body: Container(
-
         color: Colors.grey[850],
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -93,13 +92,9 @@ class ChallengesPage extends StatelessWidget {
   }
 
   void completeChallenge(String documentId) async {
-    await FirebaseFirestore.instance
-        .collection('Challenges')
-        .doc(documentId)
-        .update({
+    await FirebaseFirestore.instance.collection('Challenges').doc(documentId).update({
       'isCompleted': true,
     });
     _confettiController.play();
   }
 }
-
