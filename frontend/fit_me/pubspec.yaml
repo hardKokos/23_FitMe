@@ -43,6 +43,10 @@ dependencies:
   anim_search_bar: ^2.0.3
   barcode_scan2: ^4.3.0
   customizable_counter: ^1.0.4
+  numberpicker: ^2.1.2
+  shopping_cart: ^0.0.1
+  badges: ^3.1.2
+  equatable: ^2.0.0
   # http: ^1.1.0
 
 dev_dependencies:

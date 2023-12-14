@@ -1,17 +1,16 @@
 import 'package:confetti/confetti.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//OPAKUJ ELEMENTY LISTY W WIDGET CARD TAK SAMO ARTICLE PAGE
 
 class ChallengesPage extends StatelessWidget {
-  final ConfettiController _confettiController =
-      ConfettiController(duration: const Duration(seconds: 1));
-
-  ChallengesPage({super.key});
+  final ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 1));
 
   @override
   Widget build(BuildContext context) {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -27,13 +26,15 @@ class ChallengesPage extends StatelessWidget {
         elevation: 0.0,
       ),
       body: Container(
-        color: Colors.grey[850], // Kolor szary dla tła kontenera
+        color: Colors.grey[850],
         child: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('Challenges').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('Challenges')
+              .where('uid', isEqualTo: userId)
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const CircularProgressIndicator();
+              return CircularProgressIndicator();
             }
             var challengesData = snapshot.data!.docs;
             return ListView.builder(
@@ -48,7 +49,7 @@ class ChallengesPage extends StatelessWidget {
                   child: ListTile(
                     title: Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -56,15 +57,14 @@ class ChallengesPage extends StatelessWidget {
                     ),
                     subtitle: Text(
                       text,
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white),
                     ),
                     trailing: ElevatedButton(
                       onPressed: isCompleted
                           ? null
                           : () => completeChallenge(challengesData[index].id),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.lime.shade400, // Background color
+                        backgroundColor: Colors.lime.shade400,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -74,7 +74,8 @@ class ChallengesPage extends StatelessWidget {
                               : 'Complete challenge'),
                           ConfettiWidget(
                             confettiController: _confettiController,
-                            blastDirectionality: BlastDirectionality.explosive,
+                            blastDirectionality:
+                                BlastDirectionality.explosive,
                             shouldLoop: false,
                           ),
                         ],
@@ -91,10 +92,7 @@ class ChallengesPage extends StatelessWidget {
   }
 
   void completeChallenge(String documentId) async {
-    await FirebaseFirestore.instance
-        .collection('Challenges')
-        .doc(documentId)
-        .update({
+    await FirebaseFirestore.instance.collection('Challenges').doc(documentId).update({
       'isCompleted': true,
     });
     _confettiController.play();
