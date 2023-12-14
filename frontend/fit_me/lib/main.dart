@@ -22,7 +22,7 @@ class FitMe extends StatelessWidget {
     ShoppingCart.init<shoppingItemModel>();
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const WidgetTree(),
+      home: WidgetTree(),
     );
   }
 }

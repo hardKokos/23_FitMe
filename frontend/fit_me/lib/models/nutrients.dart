@@ -16,12 +16,13 @@ class Nutrients {
   }
 
   Map<String, dynamic> toJson() {
+    // ignore: prefer_collection_literals
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['ENERC_KCAL'] = this.kcal;
-    data['PROCNT'] = this.protein;
-    data['FAT'] = this.fat;
-    data['CHOCDF'] = this.carbs;
-    data['FIBTG'] = this.fiber;
+    data['ENERC_KCAL'] = kcal;
+    data['PROCNT'] = protein;
+    data['FAT'] = fat;
+    data['CHOCDF'] = carbs;
+    data['FIBTG'] = fiber;
     return data;
   }
 }

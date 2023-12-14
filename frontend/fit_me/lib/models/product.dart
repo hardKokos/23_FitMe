@@ -34,16 +34,17 @@ class Product {
   }
 
   Map<String, dynamic> toJson() {
+    // ignore: prefer_collection_literals
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['foodId'] = this.foodId;
-    data['label'] = this.label;
-    data['knownAs'] = this.knownAs;
-    if (this.nutrients != null) {
-      data['nutrients'] = this.nutrients!.toJson();
+    data['foodId'] = foodId;
+    data['label'] = label;
+    data['knownAs'] = knownAs;
+    if (nutrients != null) {
+      data['nutrients'] = nutrients!.toJson();
     }
-    data['category'] = this.category;
-    data['categoryLabel'] = this.categoryLabel;
-    data['image'] = this.image;
+    data['category'] = category;
+    data['categoryLabel'] = categoryLabel;
+    data['image'] = image;
     return data;
   }
 }

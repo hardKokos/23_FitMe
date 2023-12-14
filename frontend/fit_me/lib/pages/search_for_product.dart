@@ -3,7 +3,6 @@ import 'package:fit_me/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:http/http.dart' as http;
-import 'calendar.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 
 class SearchForProduct extends StatefulWidget {
@@ -16,12 +15,7 @@ class SearchForProduct extends StatefulWidget {
 class _SearchForProductState extends State<SearchForProduct> {
   final productTextFieldController = TextEditingController();
   List<Product> products = [];
-  int _currentIndex = 0;
   bool isSearchBarExpanded = false;
-
-  Widget _title() {
-    return const Text('FitMe');
-  }
 
   @override
   void dispose() {
@@ -83,36 +77,35 @@ class _SearchForProductState extends State<SearchForProduct> {
     showModalBottomSheet<Product>(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 1000,
-          // color: Colors.amber,
-          // child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    product.image != null
-                        ? Image.network(
-                            product.image!,
-                            height: 100,
-                            errorBuilder: (context, exception, stackTrace) {
-                              return Image.network(
-                                'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
-                                height: 100,
-                              );
-                            },
-                          )
-                        : Image.network(
-                            'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
-                            height: 100,
-                          ),
-                    Text(product.label!),
-                  ]),
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  product.image != null
+                      ? Image.network(
+                          product.image!,
+                          height: 100,
+                          errorBuilder: (context, exception, stackTrace) {
+                            return Image.network(
+                              'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
+                              height: 100,
+                            );
+                          },
+                        )
+                      : Image.network(
+                          'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
+                          height: 100,
+                        ),
+                  Text(product.label!),
+                ],
+              ),
               Text('Calories: ${product.nutrients?.kcal}'),
               Text('Fat: ${product.nutrients?.fat}'),
               Text('Carbs: ${product.nutrients?.carbs}'),
@@ -129,7 +122,12 @@ class _SearchForProductState extends State<SearchForProduct> {
       },
     ).then((value) => {
           if (value != null)
-            {Navigator.pop(context, jsonEncode(product.toJson()))}
+            {
+              Navigator.pop(
+                context,
+                jsonEncode(product.toJson()),
+              )
+            }
         });
   }
 
@@ -165,7 +163,6 @@ class _SearchForProductState extends State<SearchForProduct> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    // on tap - searchForProduct
                     child: AnimSearchBar(
                       width: 400,
                       textController: productTextFieldController,
@@ -192,6 +189,16 @@ class _SearchForProductState extends State<SearchForProduct> {
                           key: ValueKey(products[index].foodId),
                           margin: const EdgeInsets.all(10),
                           child: ListTile(
+                            tileColor: Colors.grey[700],
+                            textColor: Colors.white,
+                            titleTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                            subtitleTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                             leading: products[index].image != null
                                 ? Image.network(
                                     products[index].image!,
