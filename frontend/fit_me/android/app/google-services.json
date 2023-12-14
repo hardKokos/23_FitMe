@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "414371753710",
-    "project_id": "fitmefirebase",
-    "storage_bucket": "fitmefirebase.appspot.com"
+    "project_number": "738759864456",
+    "project_id": "fitmeprojekt",
+    "storage_bucket": "fitmeprojekt.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:414371753710:android:c399ffbbbe51eeb6c68dff",
+        "mobilesdk_app_id": "1:738759864456:android:72cd960a17d16b67f16f3d",
         "android_client_info": {
-          "package_name": "com.example.fit_me"
+          "package_name": "com.example.fitme"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA0Bh3ErqVmkOs3qy8dRyiXCZcfkphpJEo"
+          "current_key": "AIzaSyDlGF_7CGJ2iiqElRlw4ov05Lm6QTt1fOc"
         }
       ],
       "services": {

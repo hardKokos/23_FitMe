@@ -1,9 +1,11 @@
+import 'package:fit_me/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'calendar.dart';
 import 'models/product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'search_for_product.dart';
 
 // Here add a page with search bar to search api for products and display them with information
 class AddMealPage extends StatefulWidget {
@@ -19,6 +21,7 @@ class _AddMealPageState extends State<AddMealPage> {
   List<Product> products = [];
   String product = '';
   bool isSearchBarExpanded = false;
+  String mealChosen = '';
 
   @override
   void initState() {
@@ -112,7 +115,7 @@ class _AddMealPageState extends State<AddMealPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Fit Me',
+          'Add meal',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -122,24 +125,9 @@ class _AddMealPageState extends State<AddMealPage> {
         backgroundColor: Colors.lime.shade400,
         centerTitle: true,
         elevation: 0.0,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
       ),
       backgroundColor: Colors.grey[850],
-      bottomNavigationBar: MyBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => EventCalendarPage()),
-            );
-          }
-        },
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

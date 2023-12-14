@@ -1,28 +1,21 @@
-import 'package:fit_me/pages/article_page.dart';
-import 'package:fit_me/pages/article_detail_page.dart';
-import 'package:fit_me/pages/challenges_page.dart';
-import 'package:fit_me/pages/home_page.dart';
-import 'package:fit_me/pages/login_register_page.dart';
-import 'package:fit_me/search_for_product.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'add_meal.dart';
-import 'package:fit_me/pages/article_page.dart';
 
-class EventCalendarPage extends StatefulWidget {
-  const EventCalendarPage({Key? key}) : super(key: key);
+class WaterStatistics extends StatefulWidget {
+  const WaterStatistics({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _EventCalendarPageState createState() => _EventCalendarPageState();
+  _WaterStatisticsState createState() => _WaterStatisticsState();
 }
 
-class _EventCalendarPageState extends State<EventCalendarPage> {
+class _WaterStatisticsState extends State<WaterStatistics> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   int _currentIndex = 0;
-  String mealChosen = '';
+  int _waterAmount = 0;
+  // final TextEditingController _controllerWaterToAdd = TextEditingController();
 
   @override
   void initState() {
@@ -44,54 +37,13 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
     }
   }
 
-
-  Widget buildRow(String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.lime.shade400,
-            child: IconButton(
-              onPressed: () {
-                // Add on press event
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AddMealPage()),
-                );
-              },
-              icon: const Icon(Icons.add, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    DateTime threeYearsAgo =
-        DateTime.now().subtract(const Duration(days: 3 * 365));
-    DateTime threeYearsForth =
-        DateTime.now().add(const Duration(days: 3 * 365));
-
+    DateTime yearAgo = DateTime.now().subtract(const Duration(days: 365));
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Fit Me',
+          'Water',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -104,14 +56,16 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[850],
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              color: Colors.grey[850],
-              child: TableCalendar(
-                firstDay: threeYearsAgo,
-                lastDay: threeYearsForth,
+      body: SizedBox(
+          height: double.infinity,
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              TableCalendar(
+                firstDay: yearAgo,
+                lastDay: DateTime.now(),
                 focusedDay: _focusedDay,
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 calendarFormat: _calendarFormat,
@@ -152,17 +106,55 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
                   formatButtonVisible: false,
                 ),
               ),
-            ),
-            buildRow('Brekfast'),
-            buildRow('Second brekfast'),
-            buildRow('Lunch'),
-            buildRow('Dinner'),
-            buildRow('Snack'),
-            buildRow('Supper'),
-          ],
-        ),
-      ),
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 50.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        _waterAmount.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 70,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        "/ 2000 ml",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _waterAmount += 250;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          backgroundColor: Colors.lime.shade400,
+                        ),
+                        child: const Text(
+                          "+ 250 ml",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )),
     );
   }
 }
-
