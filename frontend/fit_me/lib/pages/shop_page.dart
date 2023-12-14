@@ -23,8 +23,19 @@ class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[850],
       appBar: AppBar(
-        title: const Text('Fit Me'),
+        title: const Text(
+          'Fit Me',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.lime.shade400,
+        centerTitle: true,
+        elevation: 0.0,
         actions: [
           badges.Badge(
             badgeContent: Text(cartItemCount.toString()),
@@ -65,7 +76,10 @@ class _ShopPageState extends State<ShopPage> {
 
               return Card(
                 child: ListTile(
-                  leading: Image.network(imagePath),
+                  leading: Image.network(
+                    imagePath,
+                    width: 100,
+                    height: 100,),
                   title: Text(name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,6 +89,9 @@ class _ShopPageState extends State<ShopPage> {
                     ],
                   ),
                   trailing: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lime.shade400,
+                    ),
                     onPressed: () {
                       shoppingItemModel item = shoppingItemModel(
                         id: int.parse(itemId),

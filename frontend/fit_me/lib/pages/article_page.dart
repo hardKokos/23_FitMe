@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_me/pages/article_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ArticlePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -12,7 +14,7 @@ class ArticlePage extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Adjusted text color
+            color: Colors.black,
           ),
         ),
         backgroundColor: Colors.lime.shade400,
@@ -22,7 +24,10 @@ class ArticlePage extends StatelessWidget {
       body: Container(
         color: Colors.grey[850],
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('Articles').snapshots(),
+          stream: FirebaseFirestore.instance
+                  .collection('Articles')
+                  .where('uid', isEqualTo: userId)
+                  .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const CircularProgressIndicator();

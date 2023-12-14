@@ -39,29 +39,35 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              widget.title,
-              style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            )),
-            SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: () {
-                toggleReadStatus();
-              },
-              style: ElevatedButton.styleFrom(
-              backgroundColor: isRead ? Colors.red[400] : Colors.green,
-              ),
-              child: Text(isRead ? 'Mark as Unread' : 'Mark as Read'),
-            ),
-          ],
+  title: Row(
+    children: [
+      Flexible(
+        child: Text(
+          widget.title,
+          style: const TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
-        backgroundColor: Colors.lime.shade400,
       ),
+      SizedBox(width: 8),
+      ElevatedButton(
+        onPressed: () {
+          toggleReadStatus();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isRead ? Colors.red[400] : Colors.green,
+        ),
+        child: Text(isRead ? 'Mark as Unread' : 'Mark as Read'),
+      ),
+    ],
+  ),
+  backgroundColor: Colors.lime.shade400,
+),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15),

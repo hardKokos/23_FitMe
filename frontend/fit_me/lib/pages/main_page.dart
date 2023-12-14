@@ -1,6 +1,8 @@
 import 'package:fit_me/calendar.dart';
 import 'package:fit_me/pages/article_page.dart';
 import 'package:fit_me/pages/challenges_page.dart';
+import 'package:fit_me/pages/daily_activities_page.dart';
+import 'package:fit_me/pages/diet_page.dart';
 import 'package:fit_me/pages/home_page.dart';
 import 'package:fit_me/pages/shop_page.dart';
 import 'package:fit_me/pages/water_statistics.dart';
@@ -14,7 +16,6 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() =>
       _MainPageState();
 }
-
 class _MainPageState
     extends State<MainPage> {
   int _selectedIndex = 0;
@@ -23,11 +24,11 @@ class _MainPageState
   static final List<Widget> _widgetOptions = <Widget>[
       EventCalendarPage(),
       SearchForProduct(),
-      ArticlePage(),
-      ChallengesPage(),
+      DietPage(),
+      DailyActivitiesPage(),
       WaterStatistics(),
       ShopPage(),
-            //HomePage(),
+      HomePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -87,6 +88,14 @@ class _MainPageState
         BottomNavigationBarItem(
           icon: Icon(
             Icons.shopping_bag,
+            color: Colors.white,
+          ),
+          label: 'Shop',
+          backgroundColor: Colors.black,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.account_box,
             color: Colors.white,
           ),
           label: 'Account',
