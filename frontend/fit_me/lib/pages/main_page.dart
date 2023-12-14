@@ -4,6 +4,7 @@ import 'package:fit_me/pages/challenges_page.dart';
 import 'package:fit_me/pages/daily_activities_page.dart';
 import 'package:fit_me/pages/diet_page.dart';
 import 'package:fit_me/pages/home_page.dart';
+import 'package:fit_me/pages/search_for_product.dart';
 import 'package:fit_me/pages/shop_page.dart';
 import 'package:fit_me/pages/water_statistics.dart';
 import 'package:flutter/material.dart';
