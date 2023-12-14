@@ -1,6 +1,6 @@
+import 'package:fit_me/pages/search_for_product.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'pages/add_meal.dart';
 
 class EventCalendarPage extends StatefulWidget {
   const EventCalendarPage({Key? key}) : super(key: key);
@@ -14,7 +14,6 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  String mealChosen = '';
 
   @override
   void initState() {
@@ -61,7 +60,10 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
                 // Add on press event
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AddMealPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const SearchForProduct(),
+                    settings: RouteSettings(arguments: text),
+                  ),
                 );
               },
               icon: const Icon(Icons.add, color: Colors.white),

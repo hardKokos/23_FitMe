@@ -4,6 +4,7 @@ import 'package:fit_me/pages/challenges_page.dart';
 import 'package:fit_me/pages/daily_activities_page.dart';
 import 'package:fit_me/pages/diet_page.dart';
 import 'package:fit_me/pages/home_page.dart';
+import 'package:fit_me/pages/search_for_product.dart';
 import 'package:fit_me/pages/shop_page.dart';
 import 'package:fit_me/pages/water_statistics.dart';
 import 'package:flutter/material.dart';
@@ -15,18 +16,15 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState
-    extends State<MainPage> {
-
+class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-      EventCalendarPage(),
-      SearchForProduct(),
-      DietPage(),
-      DailyActivitiesPage(),
-      WaterStatistics(),
-      ShopPage(),
-      HomePage(),
+    EventCalendarPage(),
+    DietPage(),
+    DailyActivitiesPage(),
+    WaterStatistics(),
+    ShopPage(),
+    HomePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -49,14 +47,6 @@ class _MainPageState
               color: Colors.white,
             ),
             label: 'Home',
-            backgroundColor: Colors.black,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            label: 'Find product',
             backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
@@ -88,6 +78,14 @@ class _MainPageState
               Icons.shopping_bag,
               color: Colors.white,
             ),
+            label: 'Shopping',
+            backgroundColor: Colors.black,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.account_box,
+              color: Colors.white,
+            ),
             label: 'Account',
             backgroundColor: Colors.black,
           ),
@@ -95,6 +93,7 @@ class _MainPageState
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.lime.shade400,
         onTap: _onItemTapped,
+        showUnselectedLabels: true,
       ),
     );
   }
