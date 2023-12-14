@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fit_me/calendar.dart';
 import 'package:fit_me/models/shoppingItem.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dart:async';
 import 'package:fit_me/pages/auth/widget_tree.dart';
 import 'package:shopping_cart/shopping_cart.dart';
-import 'package:badges/badges.dart' as badges;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

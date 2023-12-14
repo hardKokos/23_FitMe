@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:fit_me/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
@@ -118,6 +117,14 @@ class _SearchForProductState extends State<SearchForProduct> {
     }
   }
 
+  void updateProductAndRebuild(Product product) {
+    setState(() {
+      product.isSelected = true;
+      succesfullyAddedProducts.add(product);
+    });
+    buildProductCard(product, productIndex);
+  }
+
   Future<void> showProductOnModalBottomSheet(
       BuildContext context, Product product, bool? displayAddedProduct) async {
     if (displayAddedProduct == false) {
@@ -169,7 +176,7 @@ class _SearchForProductState extends State<SearchForProduct> {
                         double fiber =
                             (product.nutrients!.fiber! / 100) * counterValue;
 
-                        product.isSelected = true;
+                        updateProductAndRebuild(product);
 
                         updateProduct(
                           product.foodId!,
@@ -218,11 +225,12 @@ class _SearchForProductState extends State<SearchForProduct> {
             ),
             actions: [
               ElevatedButton(
-                onPressed: () {
-                  // Handle the delete action here
-                  // Call the function to delete the product
+                onPressed: () async {
                   deleteProduct(product.foodId, product.label);
-                  Navigator.pop(context); // Close the dialog
+                  setState(() {
+                    succesfullyAddedProducts.remove(product);
+                  });
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lime.shade400,

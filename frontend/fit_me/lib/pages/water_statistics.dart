@@ -14,9 +14,9 @@ class WaterStatistics extends StatefulWidget {
   State<WaterStatistics> createState() => _WaterStatisticsState();
 }
 
-class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderStateMixin {
+class _WaterStatisticsState extends State<WaterStatistics>
+    with TickerProviderStateMixin {
   final User? user = Auth().currentUser;
-  late String _userDocumentId;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -42,22 +42,28 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
       vsync: this,
     );
 
-    _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
+    _animation = IntTween(begin: _oldValue, end: _newValue)
+        .animate(_animationController);
 
-    FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
-      _userDocumentId = querySnapshot.docs[0].id;
-      _waterGoal = (querySnapshot.docs[0].data() as Map<String, dynamic>)['waterGoal'];
+    FirebaseFirestore.instance
+        .collection('Users')
+        .where('uid', isEqualTo: user?.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      _waterGoal =
+          (querySnapshot.docs[0].data() as Map<String, dynamic>)['waterGoal'];
     });
 
-    DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
+    DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month,
+        _selectedDay!.day, 0, 0, 0, 0, 0);
     FirebaseFirestore.instance
         .collection('waterStatistics')
         .where('uid', isEqualTo: user?.uid)
         .where('date', isEqualTo: date)
         .get()
         .then((snapshots) {
-          _displayWaterStatistics(snapshots.docs);
-        });
+      _displayWaterStatistics(snapshots.docs);
+    });
   }
 
   @override
@@ -67,7 +73,8 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
   }
 
   Future<List<DocumentSnapshot>> fetchData() async {
-    DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
+    DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month,
+        _selectedDay!.day, 0, 0, 0, 0, 0);
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('waterStatistics')
         .where('uid', isEqualTo: user?.uid)
@@ -84,44 +91,48 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
       _waterAmount += 250;
     });
 
-    _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
+    _animation = IntTween(begin: _oldValue, end: _newValue)
+        .animate(_animationController);
     _animationController.forward(from: 0.0);
 
-    if(_statisticsExist) {
+    if (_statisticsExist) {
       await FirebaseFirestore.instance
           .collection('waterStatistics')
           .doc(_statisticsId)
-          .update({'waterAmount' : _waterAmount});
-    }
-    else {
-      DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
+          .update({'waterAmount': _waterAmount});
+    } else {
+      DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month,
+          _selectedDay!.day, 0, 0, 0, 0, 0);
       Map<String, dynamic> data = {
         'uid': user?.uid,
         'date': date,
         'waterAmount': _waterAmount
       };
 
-      DocumentReference documentReference = await FirebaseFirestore.instance.collection('waterStatistics').add(data);
+      DocumentReference documentReference = await FirebaseFirestore.instance
+          .collection('waterStatistics')
+          .add(data);
       _statisticsExist = true;
       _statisticsId = documentReference.id;
     }
   }
 
   void _displayWaterStatistics(List<DocumentSnapshot> snapshots) {
-    if(snapshots.isEmpty) {
+    if (snapshots.isEmpty) {
       _statisticsExist = false;
       _newValue = 0;
       setState(() {
         _waterAmount = 0;
       });
 
-      _animation = IntTween(begin: _oldValue, end: 0).animate(_animationController);
+      _animation =
+          IntTween(begin: _oldValue, end: 0).animate(_animationController);
       _animationController.forward(from: 0.0);
       _oldValue = 0;
-    }
-    else {
-      _statisticsId =  snapshots[0].id;
-      _statistics = WaterStatisticsModel.fromJson(snapshots[0].data() as Map<String, dynamic>);
+    } else {
+      _statisticsId = snapshots[0].id;
+      _statistics = WaterStatisticsModel.fromJson(
+          snapshots[0].data() as Map<String, dynamic>);
       _statisticsExist = true;
       _oldValue = _waterAmount;
       _newValue = _statistics.waterAmount!;
@@ -129,12 +140,12 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
       setState(() {
         _waterAmount = _statistics.waterAmount!;
       });
-      _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
+      _animation = IntTween(begin: _oldValue, end: _newValue)
+          .animate(_animationController);
       _animationController.forward(from: 0.0);
       _oldValue = _newValue;
     }
   }
-
 
   Future<void> _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -176,14 +187,15 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                   value: 'setCupSize',
                   child: Text('Set cup size'),
                 ),
-
               ];
             },
             onSelected: (value) {
               if (value == 'setTarget') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WaterGoalSettings(waterGoal: _waterGoal)),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          WaterGoalSettings(waterGoal: _waterGoal)),
                 ).then((result) {
                   // Wywołane po powrocie z Navigator.pop
                   if (result != null) {
@@ -192,12 +204,9 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                     });
                   }
                 });
-              }
-              else if(value == 'setCupSize') {
-
-              }
+              } else if (value == 'setCupSize') {}
             },
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
           ),
         ],
       ),
@@ -280,7 +289,8 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
                         animation: _animation,
                         builder: (context, child) {
                           return CustomPaint(
-                            foregroundPainter: CircleProgressIndicator(_animation.value, _waterGoal),
+                            foregroundPainter: CircleProgressIndicator(
+                                _animation.value, _waterGoal),
                             child: SizedBox(
                               width: 300,
                               height: 300,
@@ -337,7 +347,4 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
           )),
     );
   }
-
-
-
 }
