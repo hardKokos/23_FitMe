@@ -1,15 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
-
 import 'package:fit_me/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:http/http.dart' as http;
 import 'package:anim_search_bar/anim_search_bar.dart';
-import 'package:fit_me/models/constants.dart';
-import 'package:fit_me/firebase.dart';
-import 'package:customizable_counter/customizable_counter.dart';
 
 class SearchForProduct extends StatefulWidget {
   const SearchForProduct({Key? key}) : super(key: key);
@@ -20,21 +14,8 @@ class SearchForProduct extends StatefulWidget {
 
 class _SearchForProductState extends State<SearchForProduct> {
   final productTextFieldController = TextEditingController();
-  TextEditingController counterTextController = TextEditingController();
   List<Product> products = [];
-  List<Product> succesfullyAddedProducts = [];
-  List<Product> selectedProducts = [];
   bool isSearchBarExpanded = false;
-  late String chosenMeal;
-  double counterValue = 100;
-  int productIndex = 0;
-  String? userId;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    chosenMeal = ModalRoute.of(context)?.settings.arguments as String;
-  }
 
   @override
   void dispose() {
@@ -59,7 +40,7 @@ class _SearchForProductState extends State<SearchForProduct> {
     Product product = Product.fromJson(responseBody['hints'][0]['food']);
 
     if (context.mounted) {
-      showProductOnModalBottomSheet(context, product, product.isSelected);
+      showProductOnModalBottomSheet(context, product);
     }
   }
 
@@ -77,264 +58,9 @@ class _SearchForProductState extends State<SearchForProduct> {
       newProducts.add(Product.fromJson(element['food']));
     }
 
-    String? uid = await authUser();
-    List<Product> produtsSelected = [];
-    produtsSelected = await searchForSelectedProducts();
-
     setState(() {
       products = newProducts;
-      userId = uid;
-      selectedProducts = produtsSelected;
     });
-
-    for (Product product in products) {
-      if (product.label != null &&
-          product.nutrients != null &&
-          product.nutrients!.kcal != null &&
-          product.nutrients!.fat != null &&
-          product.nutrients!.carbs != null &&
-          product.nutrients!.protein != null &&
-          product.nutrients!.fiber != null &&
-          product.foodId != null &&
-          product.isSelected != null) {
-        addProduct(
-          product.label.toString(),
-          (product.nutrients!.kcal! / 100) * counterValue,
-          (product.nutrients!.fat! / 100) * counterValue,
-          (product.nutrients!.carbs! / 100) * counterValue,
-          (product.nutrients!.protein! / 100) * counterValue,
-          (product.nutrients!.fiber! / 100) * counterValue,
-          userId,
-          product.isSelected!,
-          chosenMeal,
-          product.foodId!,
-          product.image!,
-          counterValue,
-        );
-        succesfullyAddedProducts.add(product);
-      } else {
-        print('Skipping product due to null properties: $product');
-      }
-    }
-  }
-
-  Future<void> showProductOnModalBottomSheet(
-      BuildContext context, Product product, bool? displayAddedProduct) async {
-    if (displayAddedProduct == false) {
-      showModalBottomSheet<Product>(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Container(
-                color: Colors.grey[850],
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    buildProductImage(product),
-                    const SizedBox(height: 10),
-                    Text(
-                      product.label!,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    buildNutrientText('Calories',
-                        (product.nutrients!.kcal! / 100) * counterValue),
-                    buildNutrientText(
-                        'Fat', (product.nutrients!.fat! / 100) * counterValue),
-                    buildNutrientText('Carbs',
-                        (product.nutrients!.carbs! / 100) * counterValue),
-                    buildNutrientText('Protein',
-                        (product.nutrients!.protein! / 100) * counterValue),
-                    buildNutrientText('Fiber',
-                        (product.nutrients!.fiber! / 100) * counterValue),
-                    const SizedBox(height: 20),
-                    buildCounter(setState),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () async {
-                        double kcal =
-                            (product.nutrients!.kcal! / 100) * counterValue;
-                        double fat =
-                            (product.nutrients!.fat! / 100) * counterValue;
-                        double carbs =
-                            (product.nutrients!.carbs! / 100) * counterValue;
-                        double protein =
-                            (product.nutrients!.protein! / 100) * counterValue;
-                        double fiber =
-                            (product.nutrients!.fiber! / 100) * counterValue;
-
-                        product.isSelected = true;
-
-                        updateProduct(
-                          product.foodId!,
-                          kcal,
-                          fat,
-                          carbs,
-                          protein,
-                          fiber,
-                          counterValue,
-                          true,
-                        );
-
-                        buildProductCard(product, productIndex);
-
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lime.shade400,
-                      ),
-                      child: const Text('Add this product to your meal'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      );
-    } else {
-      // Display the product differently, e.g., in a different widget or screen.
-      // You can customize this part based on your requirements.
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(product.label ?? ''),
-            content: Column(
-              children: [
-                // You can customize this part with your specific UI for displaying product details
-                Text(
-                    'Calories: ${(product.nutrients?.kcal ?? 0.0).toStringAsFixed(2)} kcal'),
-                Text(
-                    'Fat: ${(product.nutrients?.fat ?? 0.0).toStringAsFixed(2)}'),
-                // ... Add more product details as needed
-              ],
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  // Handle the delete action here
-                  // Call the function to delete the product
-                  deleteProduct(product.foodId, product.label);
-                  Navigator.pop(context); // Close the dialog
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lime.shade400,
-                ),
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Widget buildCounter(StateSetter setState) {
-    return CustomizableCounter(
-      borderColor: Colors.lime.shade400,
-      borderWidth: 2,
-      borderRadius: 50,
-      backgroundColor: Colors.lime.shade400,
-      textColor: Colors.white,
-      textSize: 22,
-      count: 100,
-      step: 10,
-      minCount: 0,
-      maxCount: 3000,
-      incrementIcon: const Icon(
-        Icons.add,
-        color: Colors.white,
-      ),
-      decrementIcon: const Icon(
-        Icons.remove,
-        color: Colors.white,
-      ),
-      onCountChange: (count) {
-        setState(() {
-          counterValue = count.toDouble();
-        });
-      },
-      onIncrement: (count) {
-        count += 10;
-      },
-      onDecrement: (count) {
-        count -= 10;
-      },
-    );
-  }
-
-  Widget buildNutrientText(String label, double? value) {
-    return Text(
-      '$label: ${value != null ? value.toStringAsFixed(2) : "N/A"}',
-      style: const TextStyle(color: Colors.white),
-    );
-  }
-
-  Widget buildProductImage(Product product) {
-    return product.image != null
-        ? Image.network(
-            product.image!,
-            height: 75,
-            errorBuilder: (context, exception, stackTrace) {
-              return Image.network(
-                Constants.noImagePlaceholder,
-                height: 75,
-              );
-            },
-          )
-        : Image.network(
-            Constants.noImagePlaceholder,
-            height: 75,
-          );
-  }
-
-  Widget buildProductCard(Product product, int index) {
-    return Card(
-      key: ValueKey(product.foodId),
-      margin: const EdgeInsets.all(10),
-      child: ListTile(
-        tileColor: product.isSelected! ||
-                selectedProducts.any((selectedProduct) =>
-                    selectedProduct.isSelected == true &&
-                    selectedProduct.foodId == product.foodId &&
-                    selectedProduct.label == product.label)
-            ? Colors.lime.shade400
-            : Colors.grey[700],
-        textColor: Colors.white,
-        titleTextStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-        subtitleTextStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-        ),
-        leading: buildProductImage(product),
-        title: Text(product.label!),
-        subtitle: Text('${product.nutrients?.kcal} kcal'),
-        onTap: () {
-          // Fetch data from database
-          if (selectedProducts.any((selectedProduct) =>
-              selectedProduct.isSelected == true &&
-              selectedProduct.foodId == product.foodId &&
-              selectedProduct.label == product.label)) {
-            showProductOnModalBottomSheet(context, product, true);
-          } else {
-            showProductOnModalBottomSheet(context, product, product.isSelected);
-          }
-          setState(() {
-            productIndex = index;
-          });
-        },
-      ),
-    );
   }
 
   Widget _scanProductButton(BuildContext context) {
@@ -346,21 +72,81 @@ class _SearchForProductState extends State<SearchForProduct> {
     );
   }
 
+  Future<void> showProductOnModalBottomSheet(
+      BuildContext context, Product product) async {
+    showModalBottomSheet<Product>(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 1000,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  product.image != null
+                      ? Image.network(
+                          product.image!,
+                          height: 100,
+                          errorBuilder: (context, exception, stackTrace) {
+                            return Image.network(
+                              'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
+                              height: 100,
+                            );
+                          },
+                        )
+                      : Image.network(
+                          'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
+                          height: 100,
+                        ),
+                  Text(product.label!),
+                ],
+              ),
+              Text('Calories: ${product.nutrients?.kcal}'),
+              Text('Fat: ${product.nutrients?.fat}'),
+              Text('Carbs: ${product.nutrients?.carbs}'),
+              Text('Protein: ${product.nutrients?.protein}'),
+              Text('Fiber: ${product.nutrients?.fiber}'),
+              ElevatedButton(
+                child: const Text('Add this product to your meal'),
+                onPressed: () => Navigator.pop(context, product),
+              ),
+            ],
+          ),
+          // ),
+        );
+      },
+    ).then((value) => {
+          if (value != null)
+            {
+              Navigator.pop(
+                context,
+                jsonEncode(product.toJson()),
+              )
+            }
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          chosenMeal,
-          style: const TextStyle(
+        title: const Text(
+          'Find product',
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black, // Adjusted text color
           ),
         ),
         backgroundColor: Colors.lime.shade400,
         centerTitle: true,
         elevation: 0.0,
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[850],
       body: Container(
@@ -372,35 +158,70 @@ class _SearchForProductState extends State<SearchForProduct> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: AnimSearchBar(
-                    width: 400,
-                    textController: productTextFieldController,
-                    rtl: true,
-                    onSuffixTap: () {
-                      setState(() {
-                        productTextFieldController.clear();
-                        isSearchBarExpanded = !isSearchBarExpanded;
-                      });
-                    },
-                    onSubmitted: (String product) {
-                      searchForProduct(product);
-                    },
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: AnimSearchBar(
+                      width: 400,
+                      textController: productTextFieldController,
+                      rtl: true,
+                      onSuffixTap: () {
+                        setState(() {
+                          productTextFieldController.clear();
+                          isSearchBarExpanded = !isSearchBarExpanded;
+                        });
+                      },
+                      onSubmitted: (String product) {
+                        searchForProduct(product);
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-            succesfullyAddedProducts.isNotEmpty
+                  // const SizedBox(width: 20),
+                ]),
+            products.isNotEmpty
                 ? Expanded(
                     child: ListView.builder(
-                      itemCount: succesfullyAddedProducts.length,
+                      itemCount: products.length,
                       itemBuilder: (context, index) {
-                        return buildProductCard(
-                            succesfullyAddedProducts[index], index);
+                        return Card(
+                          key: ValueKey(products[index].foodId),
+                          margin: const EdgeInsets.all(10),
+                          child: ListTile(
+                            tileColor: Colors.grey[700],
+                            textColor: Colors.white,
+                            titleTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                            subtitleTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                            leading: products[index].image != null
+                                ? Image.network(
+                                    products[index].image!,
+                                    height: 50,
+                                    errorBuilder:
+                                        (context, exception, stackTrace) {
+                                      return Image.network(
+                                        'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
+                                        height: 50,
+                                      );
+                                    },
+                                  )
+                                : Image.network(
+                                    'https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png',
+                                    height: 50,
+                                  ),
+                            title: Text(products[index].label!),
+                            subtitle:
+                                Text('${products[index].nutrients?.kcal} kcal'),
+                            onTap: () => showProductOnModalBottomSheet(
+                                context, products[index]),
+                          ),
+                        );
                       },
                     ),
                   )

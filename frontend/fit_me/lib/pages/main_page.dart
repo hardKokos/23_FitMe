@@ -54,6 +54,14 @@ class _MainPageState
           ),
           BottomNavigationBarItem(
             icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            label: 'Find product',
+            backgroundColor: Colors.black,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
               Icons.create,
               color: Colors.white,
             ),
@@ -78,7 +86,7 @@ class _MainPageState
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.shopping_bag,
               color: Colors.white,
             ),
             label: 'Account',
@@ -88,7 +96,6 @@ class _MainPageState
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.lime.shade400,
         onTap: _onItemTapped,
-        showUnselectedLabels: true,
       ),
     );
   }
