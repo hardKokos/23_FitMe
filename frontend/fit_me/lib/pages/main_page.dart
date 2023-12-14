@@ -2,7 +2,6 @@ import 'package:fit_me/calendar.dart';
 import 'package:fit_me/pages/article_page.dart';
 import 'package:fit_me/pages/challenges_page.dart';
 import 'package:fit_me/pages/home_page.dart';
-import 'package:fit_me/pages/search_for_product.dart';
 import 'package:fit_me/pages/water_statistics.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +16,6 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
     const EventCalendarPage(),
-    const SearchForProduct(),
     const ArticlePage(),
     ChallengesPage(),
     const WaterStatistics(),
@@ -48,14 +46,6 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            label: 'Find product',
-            backgroundColor: Colors.black,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
               Icons.create,
               color: Colors.white,
             ),
@@ -80,7 +70,7 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.shopping_bag,
+              Icons.person,
               color: Colors.white,
             ),
             label: 'Account',
@@ -90,6 +80,7 @@ class _MainPageState extends State<MainPage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.lime.shade400,
         onTap: _onItemTapped,
+        showUnselectedLabels: true,
       ),
     );
   }
