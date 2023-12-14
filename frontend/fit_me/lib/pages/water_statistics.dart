@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fit_me/pages/water_goal_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'auth/auth.dart';
@@ -15,6 +16,7 @@ class WaterStatistics extends StatefulWidget {
 
 class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderStateMixin {
   final User? user = Auth().currentUser;
+  late String _userDocumentId;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -41,6 +43,11 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
     );
 
     _animation = IntTween(begin: _oldValue, end: _newValue).animate(_animationController);
+
+    FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
+      _userDocumentId = querySnapshot.docs[0].id;
+      _waterGoal = (querySnapshot.docs[0].data() as Map<String, dynamic>)['waterGoal'];
+    });
 
     DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
     FirebaseFirestore.instance
@@ -157,6 +164,42 @@ class _WaterStatisticsState extends State<WaterStatistics> with TickerProviderSt
         centerTitle: true,
         elevation: 0.0,
         automaticallyImplyLeading: false,
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem(
+                  value: 'setTarget',
+                  child: Text('Set target'),
+                ),
+                const PopupMenuItem(
+                  value: 'setCupSize',
+                  child: Text('Set cup size'),
+                ),
+
+              ];
+            },
+            onSelected: (value) {
+              if (value == 'setTarget') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WaterGoalSettings(waterGoal: _waterGoal)),
+                ).then((result) {
+                  // Wywołane po powrocie z Navigator.pop
+                  if (result != null) {
+                    setState(() {
+                      _waterGoal = result;
+                    });
+                  }
+                });
+              }
+              else if(value == 'setCupSize') {
+
+              }
+            },
+            icon: Icon(Icons.more_vert),
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[850],
       body: SizedBox(
