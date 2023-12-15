@@ -28,11 +28,15 @@ class _SearchForProductState extends State<SearchForProduct> {
   double counterValue = 100;
   int productIndex = 0;
   String? userId;
+  DateTime? _selectedDate;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    chosenMeal = ModalRoute.of(context)?.settings.arguments as String;
+    Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    chosenMeal = arguments['mealType'];
+    _selectedDate = arguments['date'];
   }
 
   @override
@@ -78,7 +82,7 @@ class _SearchForProductState extends State<SearchForProduct> {
 
     String? uid = await authUser();
     List<Product> produtsSelected = [];
-    produtsSelected = await searchForSelectedProducts();
+    produtsSelected = await searchForSelectedProducts(_selectedDate);
 
     setState(() {
       products = newProducts;
@@ -109,6 +113,7 @@ class _SearchForProductState extends State<SearchForProduct> {
           product.foodId!,
           product.image!,
           counterValue,
+          _selectedDate,
         );
         succesfullyAddedProducts.add(product);
       } else {
@@ -187,9 +192,8 @@ class _SearchForProductState extends State<SearchForProduct> {
                           fiber,
                           counterValue,
                           true,
+                          chosenMeal,
                         );
-
-                        buildProductCard(product, productIndex);
 
                         Navigator.pop(context);
                       },
@@ -305,7 +309,7 @@ class _SearchForProductState extends State<SearchForProduct> {
 
   Widget buildProductCard(Product product, int index) {
     return Card(
-      key: ValueKey(product.foodId),
+      key: ValueKey(product.label),
       margin: const EdgeInsets.all(10),
       child: ListTile(
         tileColor: product.isSelected! ||

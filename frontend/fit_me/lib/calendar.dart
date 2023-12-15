@@ -1,3 +1,5 @@
+import 'package:fit_me/firebase.dart';
+import 'package:fit_me/models/product.dart';
 import 'package:fit_me/pages/search_for_product.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -14,6 +16,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  List<Product> selectedProducts = [];
 
   @override
   void initState() {
@@ -26,49 +29,144 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
     super.dispose();
   }
 
+  @override
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+    await updateSelectedProducts();
+  }
+
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
+        updateSelectedProducts();
       });
     }
   }
 
-  Widget buildRow(String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            text,
+  Future<void> updateSelectedProducts() async {
+    selectedProducts = await searchForSelectedProducts(_selectedDay);
+    setState(() {});
+  }
+
+  Future<void> _navigateToSearchForProduct(
+      String mealType, DateTime? _selectedDay) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SearchForProduct(),
+        settings: RouteSettings(arguments: {
+          'mealType': mealType,
+          'date': _selectedDay,
+        }),
+      ),
+    );
+
+    // Update products and refresh UI
+    await updateSelectedProducts();
+    setState(() {});
+  }
+
+  double calculateTotalDailyCalories() {
+    double totalCalories = 0.0;
+
+    for (var product in selectedProducts) {
+      if (product.nutrients?.kcal != null) {
+        totalCalories += product.nutrients!.kcal!;
+      }
+    }
+
+    return totalCalories;
+  }
+
+  Widget buildTotalCalories() {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Total Daily Calories:',
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.lime.shade400,
-            child: IconButton(
-              onPressed: () {
-                // Add on press event
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SearchForProduct(),
-                    settings: RouteSettings(arguments: text),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.add, color: Colors.white),
+          Text(
+            '${calculateTotalDailyCalories().toStringAsFixed(2)} kcal',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRow(String mealType) {
+    List<Product> filteredProducts = selectedProducts
+        .where((product) =>
+            product.mealType?.toLowerCase() == mealType.toLowerCase())
+        .toList();
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                mealType,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.lime.shade400,
+                child: IconButton(
+                  onPressed: () =>
+                      _navigateToSearchForProduct(mealType, _selectedDay),
+                  icon: const Icon(Icons.add, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: filteredProducts.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    filteredProducts[index].label!,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    '${filteredProducts[index].nutrients!.kcal?.toStringAsFixed(2)} kcal',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );
@@ -152,6 +250,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
             buildRow('Dinner'),
             buildRow('Snack'),
             buildRow('Supper'),
+            buildTotalCalories()
           ],
         ),
       ),
