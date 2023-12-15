@@ -125,7 +125,7 @@ class _SearchForProductState extends State<SearchForProduct> {
   void updateProductAndRebuild(Product product) {
     setState(() {
       product.isSelected = true;
-      succesfullyAddedProducts.add(product);
+      selectedProducts.add(product);
     });
     buildProductCard(product, productIndex);
   }

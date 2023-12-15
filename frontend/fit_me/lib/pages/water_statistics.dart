@@ -47,11 +47,15 @@ class _WaterStatisticsState extends State<WaterStatistics>
     _animation = IntTween(begin: _oldValue, end: _newValue)
         .animate(_animationController);
 
-
-    FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
-      _userDocumentId = querySnapshot.docs[0].id;
-      _waterGoal = (querySnapshot.docs[0].data() as Map<String, dynamic>)['waterGoal'];
-      _cupSize = (querySnapshot.docs[0].data() as Map<String, dynamic>)['cupSize'];
+    FirebaseFirestore.instance
+        .collection('Users')
+        .where('uid', isEqualTo: user?.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      _waterGoal =
+          (querySnapshot.docs[0].data() as Map<String, dynamic>)['waterGoal'];
+      _cupSize =
+          (querySnapshot.docs[0].data() as Map<String, dynamic>)['cupSize'];
     });
 
     DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month,
@@ -85,18 +89,17 @@ class _WaterStatisticsState extends State<WaterStatistics>
   }
 
   Future<void> updateWaterStatistic(int value) async {
-    if(_waterAmount == 0 && value < 0) {
+    if (_waterAmount == 0 && value < 0) {
       return;
     }
 
     setState(() {
       _oldValue = _waterAmount;
       _newValue = _waterAmount + value;
-      if(_newValue < 0) {
+      if (_newValue < 0) {
         _newValue = 0;
         _waterAmount = 0;
-      }
-      else {
+      } else {
         _waterAmount += value;
       }
     });
@@ -109,11 +112,11 @@ class _WaterStatisticsState extends State<WaterStatistics>
       await FirebaseFirestore.instance
           .collection('waterStatistics')
           .doc(_statisticsId)
-          .update({'waterAmount' : _waterAmount});
+          .update({'waterAmount': _waterAmount});
       print("XDDD");
-    }
-    else {
-      DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day, 0, 0, 0, 0, 0);
+    } else {
+      DateTime? date = DateTime(_selectedDay!.year, _selectedDay!.month,
+          _selectedDay!.day, 0, 0, 0, 0, 0);
       Map<String, dynamic> data = {
         'uid': user?.uid,
         'date': date,
@@ -227,11 +230,11 @@ class _WaterStatisticsState extends State<WaterStatistics>
                     });
                   }
                 });
-              }
-              else if(value == 'setCupSize') {
+              } else if (value == 'setCupSize') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CupSizeSettings(cupSize: _cupSize)),
+                  MaterialPageRoute(
+                      builder: (context) => CupSizeSettings(cupSize: _cupSize)),
                 ).then((result) {
                   if (result != null) {
                     setState(() {
@@ -358,9 +361,7 @@ class _WaterStatisticsState extends State<WaterStatistics>
                           Text(
                             "$_cupSize ml",
                             style: const TextStyle(
-                                fontSize: 25,
-                                color: Colors.white
-                            ),
+                                fontSize: 25, color: Colors.white),
                           ),
                           const SizedBox(width: 16),
                           ElevatedButton(

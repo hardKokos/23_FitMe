@@ -244,7 +244,7 @@ class _EventCalendarPageState extends State<EventCalendarPage> {
                 ),
               ),
             ),
-            buildRow('Brekfast'),
+            buildRow('Breakfast'),
             buildRow('Second brekfast'),
             buildRow('Lunch'),
             buildRow('Dinner'),
