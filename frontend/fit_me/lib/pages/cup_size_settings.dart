@@ -4,33 +4,33 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class WaterGoalSettings extends StatefulWidget {
-  const WaterGoalSettings({super.key, required this.waterGoal});
+class CupSizeSettings extends StatefulWidget {
+  const CupSizeSettings({super.key, required this.cupSize});
 
-  final int waterGoal;
+  final int cupSize;
 
   @override
-  State<WaterGoalSettings> createState() => _WaterGoalSettingsState();
+  State<CupSizeSettings> createState() => _CupSizeSettingsState();
 }
 
-class _WaterGoalSettingsState extends State<WaterGoalSettings> {
+class _CupSizeSettingsState extends State<CupSizeSettings> {
   final User? user = Auth().currentUser;
-  late int _waterGoal;
+  late int _cupSize;
   late int _setValue;
   bool isValueChanged = false;
 
   @override
   void initState() {
     super.initState();
-    _waterGoal = widget.waterGoal;
-    _setValue = _waterGoal;
+    _cupSize = widget.cupSize;
+    _setValue = _cupSize;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Set target'),
+        title: const Text('Set cup size'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -38,9 +38,10 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Good health starts with staying hydrated! Set a daily water intake target to stay on track.',
+              'Set the size of your cup.',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 17,
@@ -52,14 +53,14 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   NumberPicker(
-                      minValue: 500,
-                      maxValue: 6000,
-                      step: 100,
+                      minValue: 100,
+                      maxValue: 500,
+                      step: 50,
                       value: _setValue,
                       onChanged: (value) {
                         setState(() {
                           _setValue = value;
-                          if(_setValue != _waterGoal) {
+                          if(_setValue != _cupSize) {
                             isValueChanged = true;
                           }
                           else {
@@ -67,18 +68,18 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
                           }
                         });
                       },
-                    selectedTextStyle: const TextStyle(
-                      color: Colors.blueAccent,
-                      fontSize: 29,
-                    ),
+                      selectedTextStyle: const TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 29,
+                      ),
                       textStyle: const TextStyle(
                         color: Colors.white,
                         fontSize: 30,
-                      ),
+                      )
                   ),
                   const SizedBox(height: 30,),
                   const Text(
-                    'Daily water intake (ml)',
+                    'Cup size (ml)',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
@@ -93,12 +94,12 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
                         FirebaseFirestore.instance.collection('Users').where('uid', isEqualTo: user?.uid).get().then((QuerySnapshot querySnapshot) {
                           querySnapshot.docs.forEach((doc) {
                             FirebaseFirestore.instance.collection('Users').doc(doc.id).update({
-                              'waterGoal': _setValue,
+                              'cupSize': _setValue,
                             });
                           });
                         });
-                        _waterGoal = _setValue;
-                        Navigator.pop(context, _waterGoal);
+                        _cupSize = _setValue;
+                        Navigator.pop(context, _cupSize);
 
                       });
                     },
@@ -109,8 +110,8 @@ class _WaterGoalSettingsState extends State<WaterGoalSettings> {
                     child: const Text('Apply'),
                   ) : const SizedBox(),
                 ],
-              )
-            ),
+              ),
+            )
           ],
         ),
       ),

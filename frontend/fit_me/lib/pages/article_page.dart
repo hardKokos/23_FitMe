@@ -10,19 +10,6 @@ class ArticlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Fit Me',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        backgroundColor: Colors.lime.shade400,
-        centerTitle: true,
-        elevation: 0.0,
-      ),
       body: Container(
         color: Colors.grey[850],
         child: StreamBuilder(
