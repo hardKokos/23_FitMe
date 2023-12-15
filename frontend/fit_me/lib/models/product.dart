@@ -9,16 +9,21 @@ class Product {
   String? categoryLabel;
   String? image;
   bool? isSelected;
+  String? mealType;
+  DateTime? date;
 
-  Product(
-      {this.foodId,
-      this.label,
-      this.knownAs,
-      this.nutrients,
-      this.category,
-      this.categoryLabel,
-      this.image,
-      this.isSelected = false});
+  Product({
+    this.foodId,
+    this.label,
+    this.knownAs,
+    this.nutrients,
+    this.category,
+    this.categoryLabel,
+    this.image,
+    this.isSelected = false,
+    this.mealType,
+    this.date,
+  });
 
   Product.fromJson(Map<String, dynamic> json) {
     foodId = json['foodId'];
@@ -31,10 +36,14 @@ class Product {
     categoryLabel = json['categoryLabel'];
     image = json['image'];
     isSelected = false;
+    mealType = json['mealType'];
+
+    // Parse the date from the JSON and convert it to a DateTime object
+    date = DateTime.tryParse(json['date'] ??
+        ''); // Replace 'date' with the actual date field in your JSON
   }
 
   Map<String, dynamic> toJson() {
-    // ignore: prefer_collection_literals
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['foodId'] = foodId;
     data['label'] = label;
@@ -45,6 +54,11 @@ class Product {
     data['category'] = category;
     data['categoryLabel'] = categoryLabel;
     data['image'] = image;
+    data['mealType'] = mealType;
+
+    // Convert DateTime to ISO 8601 format and store it in the JSON
+    data['date'] = date?.toIso8601String();
+
     return data;
   }
 }

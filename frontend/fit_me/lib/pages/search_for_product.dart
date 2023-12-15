@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:fit_me/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
@@ -29,11 +28,15 @@ class _SearchForProductState extends State<SearchForProduct> {
   double counterValue = 100;
   int productIndex = 0;
   String? userId;
+  DateTime? _selectedDate;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    chosenMeal = ModalRoute.of(context)?.settings.arguments as String;
+    Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    chosenMeal = arguments['mealType'];
+    _selectedDate = arguments['date'];
   }
 
   @override
@@ -79,7 +82,7 @@ class _SearchForProductState extends State<SearchForProduct> {
 
     String? uid = await authUser();
     List<Product> produtsSelected = [];
-    produtsSelected = await searchForSelectedProducts();
+    produtsSelected = await searchForSelectedProducts(_selectedDate);
 
     setState(() {
       products = newProducts;
@@ -110,12 +113,21 @@ class _SearchForProductState extends State<SearchForProduct> {
           product.foodId!,
           product.image!,
           counterValue,
+          _selectedDate,
         );
         succesfullyAddedProducts.add(product);
       } else {
         print('Skipping product due to null properties: $product');
       }
     }
+  }
+
+  void updateProductAndRebuild(Product product) {
+    setState(() {
+      product.isSelected = true;
+      succesfullyAddedProducts.add(product);
+    });
+    buildProductCard(product, productIndex);
   }
 
   Future<void> showProductOnModalBottomSheet(
@@ -169,7 +181,7 @@ class _SearchForProductState extends State<SearchForProduct> {
                         double fiber =
                             (product.nutrients!.fiber! / 100) * counterValue;
 
-                        product.isSelected = true;
+                        updateProductAndRebuild(product);
 
                         updateProduct(
                           product.foodId!,
@@ -180,9 +192,8 @@ class _SearchForProductState extends State<SearchForProduct> {
                           fiber,
                           counterValue,
                           true,
+                          chosenMeal,
                         );
-
-                        buildProductCard(product, productIndex);
 
                         Navigator.pop(context);
                       },
@@ -218,11 +229,12 @@ class _SearchForProductState extends State<SearchForProduct> {
             ),
             actions: [
               ElevatedButton(
-                onPressed: () {
-                  // Handle the delete action here
-                  // Call the function to delete the product
+                onPressed: () async {
                   deleteProduct(product.foodId, product.label);
-                  Navigator.pop(context); // Close the dialog
+                  setState(() {
+                    succesfullyAddedProducts.remove(product);
+                  });
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lime.shade400,
@@ -297,7 +309,7 @@ class _SearchForProductState extends State<SearchForProduct> {
 
   Widget buildProductCard(Product product, int index) {
     return Card(
-      key: ValueKey(product.foodId),
+      key: ValueKey(product.label),
       margin: const EdgeInsets.all(10),
       child: ListTile(
         tileColor: product.isSelected! ||

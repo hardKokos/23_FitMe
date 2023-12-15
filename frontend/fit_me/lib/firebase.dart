@@ -33,9 +33,10 @@ Future<void> addProduct(
   String? foodId,
   String? image,
   double? productWeight,
+  DateTime? date,
 ) async {
   QuerySnapshot querySnapshot = await productsCollection
-      .where('foodId', isEqualTo: foodId)
+      .where('productName', isEqualTo: productName)
       .limit(1)
       .get();
 
@@ -53,6 +54,7 @@ Future<void> addProduct(
       'foodId': foodId,
       'image': image,
       'productWeight': productWeight,
+      'date': date,
     });
   } else {
     print('Product exists in database');
@@ -68,6 +70,7 @@ Future<void> updateProduct(
   double? productFiber,
   double? productWeight,
   bool? isSelected,
+  String? mealType,
 ) async {
   try {
     QuerySnapshot querySnapshot = await productsCollection
@@ -84,7 +87,8 @@ Future<void> updateProduct(
         'productCarbs': productCarbs,
         'productProtein': productProtein,
         'productFiber': productFiber,
-        'productWeight': productWeight
+        'productWeight': productWeight,
+        'mealType': mealType,
       });
     }
   } catch (error) {
@@ -92,10 +96,12 @@ Future<void> updateProduct(
   }
 }
 
-Future<List<Product>> searchForSelectedProducts() async {
+Future<List<Product>> searchForSelectedProducts(DateTime? date) async {
   try {
-    QuerySnapshot querySnapshot =
-        await productsCollection.where('isSelected', isEqualTo: true).get();
+    QuerySnapshot querySnapshot = await productsCollection
+        .where('date', isEqualTo: date)
+        .where('isSelected', isEqualTo: true)
+        .get();
 
     List<Product> selectedProducts = [];
 
@@ -113,6 +119,7 @@ Future<List<Product>> searchForSelectedProducts() async {
         foodId: data['foodId'],
         isSelected: data['isSelected'],
         label: data['productName'],
+        mealType: data['mealType'],
       );
 
       selectedProducts.add(product);
@@ -129,7 +136,6 @@ Future<List<Product>> searchForSelectedProducts() async {
 Future<void> deleteProduct(String? foodId, String? productName) async {
   try {
     QuerySnapshot querySnapshot = await productsCollection
-        .where('foodId', isEqualTo: foodId)
         .where('productName', isEqualTo: productName)
         .limit(1)
         .get();
